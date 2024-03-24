@@ -15,6 +15,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import PhotoUpload from "@/components/PhotoUpload";
 interface IPayload {
   sender: string;
   recipient: string;
@@ -77,9 +78,13 @@ export default function Home() {
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  const handleImageSelect = (file: any) => {
+    // Handle the file, e.g., upload to server or display a preview
+    console.log(file);
+  };
+
   useEffect(() => {
     if (renderAudioBg && audioRef.current) {
-      audioRef.current.play();
       audioRef.current.volume = 0.2;
     }
   }, [renderAudioBg]);
@@ -197,7 +202,7 @@ export default function Home() {
             }
           />
           {steps === 1 && (
-            <div className="flex flex-col">
+            <div className="flex flex-col h-[100%]">
               <div
                 className={`flex flex-col justify-center place-items-center h-[100%] pt-20 transition-1 ${
                   animateOut &&
@@ -205,8 +210,8 @@ export default function Home() {
                 }`}
               >
                 <Logo
-                  width={200}
-                  height={100}
+                  width={100}
+                  height={50}
                   color={
                     bgColor === "red"
                       ? "#F78B93"
@@ -219,8 +224,8 @@ export default function Home() {
                 <Image
                   src="/colors-of-connection.png"
                   alt="Emina Logo"
-                  width={400}
-                  height={200}
+                  width={200}
+                  height={100}
                   className={`animate__animated animate__slow transition-1 ${
                     animateIn && "animate__zoomIn"
                   }`}
@@ -285,6 +290,9 @@ export default function Home() {
                   <button
                     className={`text-center text-white mt-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1`}
                     onClick={async () => {
+                      if (audioRef.current) {
+                        audioRef.current.play();
+                      }
                       setAnimateIn2(false);
                       setAnimateOut(true);
                       await wait(2000);
@@ -414,8 +422,8 @@ export default function Home() {
               }`}
             >
               <Logo
-                width={200}
-                height={100}
+                width={100}
+                height={75}
                 color={
                   bgColor === "red"
                     ? "#F78B93"
@@ -423,10 +431,10 @@ export default function Home() {
                     ? "#F4DEA7"
                     : "#8CB9EA"
                 }
-                className={`mb-16 transition-1`}
+                className={`mb-5 transition-1`}
               />
-              <h3
-                className={`text-center text-${
+              <h4
+                className={`text-center px-5 text-${
                   bgColor === "red"
                     ? "red-400"
                     : bgColor === "yellow"
@@ -435,8 +443,8 @@ export default function Home() {
                 }`}
               >
                 Bestie mau bonding sama siapa nih?
-              </h3>
-              <div className="w-[100%] p-5">
+              </h4>
+              <div className="w-[100%] p-5 relative z-10">
                 <div className="input-icon">
                   <label
                     className={`flex flex-col text-${
@@ -500,7 +508,13 @@ export default function Home() {
                   Start to create connection card
                 </button>
               </div>
-              <Image src={"/love.png"} width={200} height={200} alt="LOVE" />
+              <Image
+                src={"/love.png"}
+                width={200}
+                height={200}
+                alt="LOVE"
+                className="absolute bottom-0 z-0"
+              />
             </div>
           )}
           {steps === 5 && (
@@ -529,6 +543,13 @@ export default function Home() {
                   </button>
                 </div>
                 <div className="w-[100%] mt-1 text-center">
+                  <Image
+                    alt={"hearts"}
+                    width={75}
+                    height={75}
+                    src={`/hearts-2.png`}
+                    className="absolute inline left-10"
+                  />
                   <Logo
                     width={75}
                     height={75}
@@ -540,6 +561,13 @@ export default function Home() {
                         : "#8CB9EA"
                     }
                     className={`transition-1 inline`}
+                  />
+                  <Image
+                    alt={"hearts"}
+                    width={75}
+                    height={75}
+                    src={`/hearts.png`}
+                    className="absolute inline right-10"
                   />
                 </div>
                 <h5
@@ -637,6 +665,13 @@ export default function Home() {
                 </button>
               </div>
             </>
+          )}
+          {steps === 6 && (
+            <PhotoUpload
+              onImageSelect={handleImageSelect}
+              placeholderImg="/placeholder.png"
+              color={bgColor}
+            />
           )}
         </div>
       )}
