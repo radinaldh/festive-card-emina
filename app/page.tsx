@@ -71,6 +71,7 @@ export default function Home() {
   const [animateOut2, setAnimateOut2] = useState<boolean>(false);
   const [renderAudio, setRenderAudio] = useState<boolean>(false);
   const [renderAudioBg, setRenderAudioBg] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
   const [bgColor, setBgColor] = useState<string>("red");
   const [payload, setPayload] = useState<IPayload>(initialPayload);
   const wait = (time: number) =>
@@ -79,8 +80,14 @@ export default function Home() {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const handleImageSelect = (file: any) => {
-    // Handle the file, e.g., upload to server or display a preview
     console.log(file);
+    // Handle the file, e.g., upload to server or display a preview
+    if (file) {
+      setPayload((prev: any) => ({
+        ...prev,
+        image_url: file.name,
+      }));
+    }
   };
 
   useEffect(() => {
@@ -169,6 +176,17 @@ export default function Home() {
             animateIn ? "animate__fadeIn block" : "hidden"
           } animate__slow bg-${bgColor}-opacity`}
         >
+          {error &&
+            (!payload.recipient || !payload.sender || !payload.message) && (
+              <p className="bg-red w-[100%] text-center absolute top-0 z-20">
+                ERROR:{" "}
+                {!payload.sender
+                  ? "Sender is empty"
+                  : !payload.recipient
+                  ? "Recipient is empty"
+                  : "Message is empty"}
+              </p>
+            )}
           {renderAudioBg && (
             <audio
               ref={audioRef}
@@ -466,6 +484,7 @@ export default function Home() {
                           sender: e.target.value,
                         }));
                       }}
+                      placeholder="Sender name"
                     />
                   </label>
                 </div>
@@ -491,18 +510,25 @@ export default function Home() {
                           recipient: e.target.value,
                         }));
                       }}
+                      placeholder="Recipient name"
                     />
                   </label>
                 </div>
+
                 <button
                   className={`text-center text-white p-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1`}
                   onClick={async () => {
-                    setAnimateIn2(false);
-                    setAnimateOut(true);
-                    await wait(1000);
-                    setAnimateOut(false);
-                    setAnimateIn2(true);
-                    setSteps(5);
+                    if (payload.sender && payload.recipient) {
+                      setAnimateIn2(false);
+                      setAnimateOut(true);
+                      await wait(1000);
+                      setAnimateOut(false);
+                      setAnimateIn2(true);
+                      setSteps(5);
+                      setError(false);
+                    } else {
+                      setError(true);
+                    }
                   }}
                 >
                   Start to create connection card
@@ -655,10 +681,17 @@ export default function Home() {
                 <button
                   className={`text-center text-white p-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1 relative z-10`}
                   onClick={async () => {
-                    setAnimateIn2(false);
-                    setAnimateOut(true);
-                    await wait(1000);
-                    setSteps(6);
+                    if (payload.message) {
+                      setAnimateIn2(false);
+                      setAnimateOut(true);
+                      await wait(1000);
+                      setAnimateOut(false);
+                      setAnimateIn2(true);
+                      setSteps(6);
+                      setError(false);
+                    } else {
+                      setError(true);
+                    }
                   }}
                 >
                   Next
@@ -667,11 +700,36 @@ export default function Home() {
             </>
           )}
           {steps === 6 && (
-            <PhotoUpload
-              onImageSelect={handleImageSelect}
-              placeholderImg="/placeholder.png"
-              color={bgColor}
-            />
+            <div
+              className={`mt-5 w-[100%] z-10 px-5 relative ${
+                animateIn2 && !animateOut
+                  ? "animate__animated animate__fadeIn"
+                  : "animate__animated animate__fadeOut"
+              }`}
+            >
+              <div className="w-[100%]">
+                <button
+                  className={`text-center bg-white rounded-xl shadow-sm py-2 px-5 text-${
+                    bgColor === "red"
+                      ? "red-400"
+                      : bgColor === "yellow"
+                      ? "yellow-400"
+                      : "blue-400"
+                  }`}
+                  onClick={() => {
+                    setSteps(5);
+                  }}
+                >
+                  {"< Back"}
+                </button>
+              </div>
+              <PhotoUpload
+                onImageSelect={handleImageSelect}
+                placeholderImg="/placeholder.png"
+                color={bgColor}
+                handleSubmit={() => console.log(payload)}
+              />
+            </div>
           )}
         </div>
       )}
