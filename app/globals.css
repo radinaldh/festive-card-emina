@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --red: #f78b93;
+  --blue: #8cb9ea;
+  --yellow: #f4dea7;
+  --red-opacity: #ffeced;
+  --blue-opacity: #e6edf5;
+  --yellow-opacity: #fcf9f1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+    --red: #f78b93;
+    --blue: #8cb9ea;
+    --yellow: #f4dea7;
+    --red-opacity: #ffeced;
+    --blue-opacity: #e6edf5;
+    --yellow-opacity: #fcf9f1;
+  }
+}
+
+html {
+  display: flex;
+  justify-content: center;
+  background: rgb(253, 157, 161);
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  max-width: 750px;
+  width: 100%;
+}
+
+h1 {
+  font-size: 2.125rem;
+}
+h2 {
+  font-size: 1.875rem;
+}
+h3 {
+  font-size: 1.5rem;
+}
+h4 {
+  font-size: 1.25rem;
+}
+h5 {
+  font-size: 1.125rem;
+}
+h6 {
+  font-size: 1rem;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.loading-container {
+  display: flex;
+}
+
+.heart {
+  width: 25px;
+  height: 25px;
+  background: url("/heart.png") no-repeat center center;
+  background-size: contain;
+  margin: 0 5px;
+  transition: background-image 0.75s;
+}
+
+.heart.filled {
+  background-image: url("/heart-filled.png");
+}
+
+.line-vector {
+  background-image: url("/line.png"),
+    linear-gradient(
+      163deg,
+      rgba(253, 157, 161, 1) 28%,
+      rgba(254, 212, 84, 1) 87%
+    );
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.bg-gradient {
+  background: linear-gradient(
+    163deg,
+    rgba(253, 157, 161, 1) 28%,
+    rgba(254, 212, 84, 1) 87%
+  );
+}
+
+.bg-red {
+  background: var(--red);
+}
+
+.bg-yellow {
+  background: var(--yellow);
+}
+
+.bg-blue {
+  background: var(--blue);
+}
+
+.bg-red-opacity {
+  background: var(--red-opacity);
+}
+
+.bg-yellow-opacity {
+  background: var(--yellow-opacity);
+}
+
+.bg-blue-opacity {
+  background: var(--blue-opacity);
+}
+
+.kv-bg-red::before {
+  content: "";
+  padding: 20px;
+  background-color: var(--red);
+  aspect-ratio: 1 / 1;
+  display: block;
+  border-radius: 50%;
+}
+
+.kv-bg-yellow::before {
+  content: "";
+  padding: 20px;
+  background-color: var(--yellow);
+  aspect-ratio: 1 / 1;
+  display: block;
+  border-radius: 50%;
+}
+
+.kv-bg-blue::before {
+  content: "";
+  padding: 20px;
+  background-color: var(--blue);
+  aspect-ratio: 1 / 1;
+  display: block;
+  border-radius: 50%;
+}
+
+.transition-1 {
+  transition: 1s;
+}
+
+.text-bubble {
+  background-color: #fff;
+  border-radius: 25px;
+}
+
+.text-bubble:after {
+  content: "";
+  display: block;
+  position: absolute;
+  margin-top: -40px;
+  padding-top: 0px;
+  bottom: -15%;
+  left: 20%;
+  border-width: 30px 0 0 30px;
+  border-style: solid;
+  border-color: #fff;
+  width: 2px;
+  border-radius: 0 0 40px 0;
+}
+
+.text-red-400 {
+  --tw-text-opacity: 1;
+  color: rgb(237 91 91);
+}
+
+.text-blue-400 {
+  --tw-text-opacity: 1;
+  color: #8cb9ea;
+}
+
+.text-yellow-400 {
+  --tw-text-opacity: 1;
+  color: #efd799;
+}
+
+.border-red {
+  --tw-text-opacity: 1;
+  border: 2px solid rgb(237 91 91);
+}
+
+.border-blue {
+  --tw-text-opacity: 1;
+  border: 2px solid #8cb9ea;
+}
+
+.border-yellow {
+  --tw-text-opacity: 1;
+  border: 2px solid #efd799;
+}
+
+.input-icon {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.input-icon::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-20%);
+  background: url(/streamline_toilet-women.png) no-repeat center center;
+  background-size: contain;
+}
+
+.form-control {
+  padding: 12px 40px 12px 40px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 3px #cecece;
+  margin: 10px 0 20px 0px;
+  color: #000;
+  width: 100%;
+}
+
+.message-control {
+  padding: 15px;
+  border-radius: 15px;
+  color: #000;
+  width: 100%;
+  height: 100%;
+}
+
+.form-control::before {
+  content: "";
+  background: url("/streamline_toilet-women.png");
+}
+
+.form-control:focus-visible,
+.form-control:focus,
+.form-control:hover {
+  border: unset;
+  box-shadow: 0px 5px 5px #cecece;
+  outline: unset;
+}
+
+.message-control:focus-visible,
+.message-control:focus,
+.message-control:hover {
+  outline: unset;
+}
+
+.swiper-wrapper {
+  align-items: stretch !important;
+}
