@@ -20,32 +20,6 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
   const [isVideoReady, setIsVideoReady] = useState<boolean>(false);
   const [photoTaken, setPhotoTaken] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((mediaStream) => {
-          setStream(mediaStream);
-          if (videoRef.current) {
-            videoRef.current.srcObject = mediaStream;
-            videoRef.current.play().then(() => {
-              setIsVideoReady(true); // Video is ready to be drawn onto the canvas
-            });
-          }
-        })
-        .catch(() => {
-          drawPlaceholder();
-        });
-    } else {
-      drawPlaceholder();
-    }
-
-    return () => {
-      // Clean up the stream
-      stream?.getTracks().forEach((track) => track.stop());
-    };
-  }, [stream]);
-
   const drawPlaceholder = useCallback(() => {
     const ctx = canvasRef.current?.getContext("2d");
     if (ctx && canvasRef.current) {
@@ -115,12 +89,43 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
     }
   };
 
-  const handleRetry = () => {
+  const handleRetry = async () => {
     setPhotoTaken(false); // Reset to take another photo or upload
+    // Clear the canvas first
+    const ctx = canvasRef.current?.getContext("2d");
+    if (ctx && canvasRef.current) {
+      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    }
+    // If the stream is still active, attempt to play the video again
     if (stream && videoRef.current) {
-      videoRef.current.play().then(() => setIsVideoReady(true));
+      try {
+        await videoRef.current.play();
+        setIsVideoReady(true);
+      } catch (error) {
+        console.error("Error trying to replay the video:", error);
+        drawPlaceholder();
+      }
     } else {
-      drawPlaceholder(); // Draw placeholder if no stream is available
+      // If the stream is not active, reacquire it
+      await getVideoStream();
+    }
+  };
+
+  // getVideoStream() function should be defined outside so it can be called both from useEffect and handleRetry
+  const getVideoStream = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+      setStream(mediaStream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+        await videoRef.current.play();
+        setIsVideoReady(true);
+      }
+    } catch (error) {
+      console.error("Error accessing the video stream:", error);
+      drawPlaceholder();
     }
   };
 
@@ -153,7 +158,80 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
     }
   };
 
-  console.log(photoTaken);
+  const updateCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    if (canvas && video && video.videoWidth > 0 && video.videoHeight > 0) {
+      const ctx = canvas.getContext("2d");
+      const videoRatio = video.videoWidth / video.videoHeight;
+      const canvasRatio = canvas.width / canvas.height;
+      let drawWidth, drawHeight, drawX, drawY;
+
+      // Determine the dimensions to cover the canvas with the video.
+      if (videoRatio < canvasRatio) {
+        drawWidth = canvas.width;
+        drawHeight = drawWidth / videoRatio;
+        drawX = 0;
+        drawY = (canvas.height - drawHeight) / 2; // Center vertically
+      } else {
+        drawHeight = canvas.height;
+        drawWidth = drawHeight * videoRatio;
+        drawX = (canvas.width - drawWidth) / 2; // Center horizontally
+        drawY = 0;
+      }
+
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+      ctx?.drawImage(video, drawX, drawY, drawWidth, drawHeight);
+    }
+
+    // Request the next frame of the animation
+    requestAnimationFrame(updateCanvas);
+  }, []);
+
+  useEffect(() => {
+    // Start updating the canvas as soon as the component mounts
+    updateCanvas();
+  }, [updateCanvas]);
+
+  useEffect(() => {
+    const getVideoStream = async () => {
+      try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+        setStream(mediaStream);
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStream;
+          await videoRef.current.play();
+          setIsVideoReady(true);
+        }
+      } catch (error) {
+        console.error(error);
+        drawPlaceholder();
+      }
+    };
+
+    getVideoStream();
+
+    return () => {
+      // Cleanup function to stop the video stream
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const animationFrameId = requestAnimationFrame(updateCanvas);
+
+    // Cleanup function to cancel the requestAnimationFrame
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [updateCanvas]);
 
   return (
     <div className="relative z-10 h-[100%] py-5 mt-10">
@@ -203,13 +281,14 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             Reveal Your Beauty. Snap a photo and let your radiance shine. Share
             your essence with the world.
           </p>
-          {stream && (
-            <video
-              ref={videoRef}
-              style={{ display: "none" }}
-              onCanPlay={() => setIsVideoReady(true)}
-            ></video>
-          )}
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            style={{ position: "absolute", top: "-9999px" }}
+            onCanPlay={() => setIsVideoReady(true)}
+          ></video>
           <button
             className={`text-center text-white mt-5 bg-${color} w-[100%] py-4 rounded-md transition-1 flex justify-center items-center gap-1`}
             onClick={takePhoto}
@@ -323,16 +402,9 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             Reveal Your Beauty. Snap a photo and let your radiance shine. Share
             your essence with the world.
           </p>
-          {stream && (
-            <video
-              ref={videoRef}
-              style={{ display: "none" }}
-              onCanPlay={() => setIsVideoReady(true)}
-            ></video>
-          )}
           <div className="flex justify-center mt-5 items-center gap-5">
             <img alt="HeartLeft" width={75} height={75} src="/heart-left.png" />
-            <button onClick={handleSubmit}>
+            <button type="button" onClick={handleSubmit}>
               <svg
                 width="98"
                 height="90"

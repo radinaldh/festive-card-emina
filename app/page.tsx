@@ -80,7 +80,6 @@ export default function Home() {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const handleImageSelect = (file: any) => {
-    console.log(file);
     // Handle the file, e.g., upload to server or display a preview
     if (file) {
       setPayload((prev: any) => ({
