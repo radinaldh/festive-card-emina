@@ -128,7 +128,7 @@ h6 {
 
 .kv-bg-red::before {
   content: "";
-  padding: 20px;
+  padding: 10px;
   background-color: var(--red);
   aspect-ratio: 1 / 1;
   display: block;
@@ -137,7 +137,7 @@ h6 {
 
 .kv-bg-yellow::before {
   content: "";
-  padding: 20px;
+  padding: 10px;
   background-color: var(--yellow);
   aspect-ratio: 1 / 1;
   display: block;
@@ -146,7 +146,7 @@ h6 {
 
 .kv-bg-blue::before {
   content: "";
-  padding: 20px;
+  padding: 10px;
   background-color: var(--blue);
   aspect-ratio: 1 / 1;
   display: block;

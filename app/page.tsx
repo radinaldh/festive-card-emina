@@ -78,6 +78,7 @@ export default function Home() {
     new Promise((resolve) => setTimeout(resolve, time));
 
   const audioRef = useRef<HTMLAudioElement>(null);
+  const voiceRef = useRef<HTMLAudioElement>(null);
 
   const handleImageSelect = (file: any) => {
     // Handle the file, e.g., upload to server or display a preview
@@ -309,10 +310,14 @@ export default function Home() {
                     onClick={async () => {
                       if (audioRef.current) {
                         audioRef.current.play();
+                        audioRef.current.volume = 0.2;
                       }
                       setAnimateIn2(false);
                       setAnimateOut(true);
                       await wait(2000);
+                      if (voiceRef.current) {
+                        voiceRef.current.play();
+                      }
                       setSteps(2);
                       setAnimateIn2(true);
                       setAnimateOut(false);
@@ -386,7 +391,12 @@ export default function Home() {
                 }`}
               />
               {renderAudio && (
-                <audio controls={false} autoPlay className="hidden">
+                <audio
+                  ref={voiceRef}
+                  controls={false}
+                  autoPlay
+                  className="hidden"
+                >
                   <source src="/voice_over.mp3" type="audio/mpeg" />
                   Your browser does not support the audio element.
                 </audio>
