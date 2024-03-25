@@ -1,4 +1,4 @@
-"use client";
+import { FC } from "react";
 
 interface IEllipse {
   width?: any;
@@ -7,12 +7,7 @@ interface IEllipse {
   className?: string;
 }
 
-export default function EllipseRevert({
-  width,
-  height,
-  color,
-  className,
-}: IEllipse) {
+const EllipseRevert: FC<IEllipse> = ({ width, height, color, className }) => {
   return (
     <svg
       width="353"
@@ -44,4 +39,6 @@ export default function EllipseRevert({
       </defs>
     </svg>
   );
-}
+};
+
+export default EllipseRevert;

@@ -1,33 +1,41 @@
 "use client";
-import Image from "next/image";
-import LoadingHearts from "../components/LoadingHearts.client";
-import "animate.css";
-import { useEffect, useRef, useState } from "react";
-import Logo from "@/components/Logo";
+
+import { saveCardData, uploadImageAndGetURL } from "@/app/services/cardService";
 import Ellipse from "@/components/Ellipse";
-import Lottie from "react-lottie-player";
+import EllipseRevert from "@/components/EllipseRevert";
+import Logo from "@/components/Logo";
+import PhotoUpload from "@/components/PhotoUpload";
 import lottieChar from "@/public/character_intro.json";
 import lottieSnake from "@/public/snake_ladder.json";
+import lottieProducts from "@/public/products.json";
+import "animate.css";
+import { NextPage } from "next";
+import Image from "next/image";
+import QRCode from "qrcode.react";
+import { useEffect, useRef, useState } from "react";
+import Lottie from "react-lottie-player";
 import { TypeAnimation } from "react-type-animation";
-import EllipseRevert from "@/components/EllipseRevert";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import PhotoUpload from "@/components/PhotoUpload";
+import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import LoadingHearts from "../components/LoadingHearts";
+
 interface IPayload {
   sender: string;
   recipient: string;
   message: string;
-  image_url: string;
+  image_url: any;
+  color: string;
 }
 
 const initialPayload = {
   sender: "",
   recipient: "",
   message: "",
-  image_url: "",
+  image_url: null,
+  color: "red",
 };
 
 const sampleItems = [
@@ -63,7 +71,7 @@ const sampleItems = [
   },
 ];
 
-export default function Home() {
+const Index: NextPage = () => {
   const [steps, setSteps] = useState(0);
   const [animateIn, setAnimateIn] = useState<boolean>(false);
   const [animateIn2, setAnimateIn2] = useState<boolean>(false);
@@ -74,6 +82,12 @@ export default function Home() {
   const [error, setError] = useState<boolean>(false);
   const [bgColor, setBgColor] = useState<string>("red");
   const [payload, setPayload] = useState<IPayload>(initialPayload);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
+  const [uploadError, setUploadError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const wait = (time: number) =>
     new Promise((resolve) => setTimeout(resolve, time));
 
@@ -85,8 +99,78 @@ export default function Home() {
     if (file) {
       setPayload((prev: any) => ({
         ...prev,
-        image_url: file.name,
+        image_url: file,
       }));
+    }
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setUploadError("");
+
+    try {
+      let imageUrl = "";
+
+      // Check if `image_url` is an instance of File
+      if (payload.image_url instanceof File) {
+        imageUrl = await uploadImageAndGetURL(payload.image_url);
+      }
+
+      const cardData = {
+        ...payload,
+        image_url: imageUrl,
+      };
+
+      const docId = await saveCardData(cardData);
+
+      const generatedLink = `${process.env.NEXT_PUBLIC_URL}/card/${docId}`;
+      setQrCodeUrl(generatedLink);
+      setSteps(7);
+      setAnimateOut(true);
+      await wait(1000);
+      setAnimateOut(false);
+      setAnimateOut2(false);
+      setAnimateIn(false);
+      setAnimateIn2(false);
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      setUploadError(
+        "Failed to upload the image and save the card. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const downloadQR = () => {
+    let canvas = document.querySelector(
+      ".HpQrcode > canvas"
+    ) as HTMLCanvasElement;
+    if (canvas) {
+      const pngUrl = canvas
+        .toDataURL("image/png")
+        .replace("image/png", "image/octet-stream");
+      let downloadLink = document.createElement("a");
+      downloadLink.href = pngUrl;
+      downloadLink.download = `${payload.sender}_${payload.recipient}.png`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(qrCodeUrl);
+      setSuccessMessage("URL copied successfully!"); // Add a success message
+    } catch (error) {
+      setErrorMessage("Error copying URL: " + error); // Add an error message
+    } finally {
+      // Optionally, clear any temporary messages after a short delay
+      setTimeout(() => {
+        setSuccessMessage("");
+        setErrorMessage("");
+      }, 2000);
     }
   };
 
@@ -119,19 +203,27 @@ export default function Home() {
 
   useEffect(() => {
     if (steps === 3) {
-      const runsAnimations2 = async () => {
+      const runsAnimations = async () => {
         await wait(4000);
         setAnimateOut(true);
         await wait(1000);
         setSteps(4);
         setAnimateOut(false);
       };
-      runsAnimations2();
+      runsAnimations();
+    }
+    if (steps === 7) {
+      const runsAnimations = async () => {
+        await wait(3000);
+        setSteps(8);
+        setAnimateIn(true);
+      };
+      runsAnimations();
     }
   }, [steps]);
 
   return (
-    <main>
+    <>
       {steps === 0 && (
         <div
           className={`flex max-h-screen flex-col justify-center h-[100vh] items-center w-[100%] line-vector overflow-hidden animate__animated ${
@@ -173,20 +265,23 @@ export default function Home() {
           className={`${
             steps !== 5 && "flex flex-col"
           } max-h-screen  justify-between h-[100vh] items-center w-[100%] overflow-hidden animate__animated relative transition-1 ${
-            animateIn ? "animate__fadeIn block" : "hidden"
+            animateIn && "animate__fadeIn"
           } animate__slow bg-${bgColor}-opacity`}
         >
-          {error &&
-            (!payload.recipient || !payload.sender || !payload.message) && (
-              <p className="bg-red w-[100%] text-center absolute top-0 z-20">
-                ERROR:{" "}
-                {!payload.sender
-                  ? "Sender is empty"
-                  : !payload.recipient
-                  ? "Recipient is empty"
-                  : "Message is empty"}
-              </p>
-            )}
+          {error ||
+            (uploadError &&
+              (!payload.recipient || !payload.sender || !payload.message) && (
+                <p className="bg-red w-[100%] text-center absolute top-0 z-20">
+                  ERROR:{" "}
+                  {!payload.sender
+                    ? "Sender is empty"
+                    : !payload.recipient
+                    ? "Recipient is empty"
+                    : !payload.message
+                    ? "Message is empty"
+                    : uploadError}
+                </p>
+              ))}
           {renderAudioBg && (
             <audio
               ref={audioRef}
@@ -222,7 +317,9 @@ export default function Home() {
           {steps === 1 && (
             <div className="flex flex-col h-[100%]">
               <div
-                className={`flex flex-col justify-center place-items-center h-[100%] pt-20 transition-1 ${
+                className={`flex flex-col justify-center place-items-center pt-5 h-[100%] ${
+                  !animateIn2 ? "opacity-0" : "opacity-100"
+                } transition-1 ${
                   animateOut &&
                   "animate__animated animate__slow animate__fadeOutUpBig"
                 }`}
@@ -260,7 +357,7 @@ export default function Home() {
                     : "-bottom-[100%] absolute"
                 }  w-[100%] } `}
               >
-                <div className="p-10 text-center text-black">
+                <div className="px-10 pt-10 pb-40 text-center text-black">
                   <div className="flex justify-evenly absolute -top-[10%] w-[100%] left-0">
                     <div
                       className={`bg-red-opacity cursor-pointer aspect-square rounded-lg ${
@@ -312,12 +409,16 @@ export default function Home() {
                         audioRef.current.play();
                         audioRef.current.volume = 0.2;
                       }
-                      setAnimateIn2(false);
-                      setAnimateOut(true);
-                      await wait(2000);
                       if (voiceRef.current) {
                         voiceRef.current.play();
                       }
+                      setPayload((prev: any) => ({
+                        ...prev,
+                        color: bgColor,
+                      }));
+                      setAnimateIn2(false);
+                      setAnimateOut(true);
+                      await wait(1000);
                       setSteps(2);
                       setAnimateIn2(true);
                       setAnimateOut(false);
@@ -437,12 +538,12 @@ export default function Home() {
               style={{ width: "100%", height: "100%" }}
               className={`absolute animate__animated animate__fast ${
                 !animateOut ? "animate__fadeIn" : "animate__fadeOut"
-              } bottom-0`}
+              } bottom-0 top-0 left-0 right-0`}
             />
           )}
           {steps === 4 && (
             <div
-              className={`my-16 py-5 h-[100%] flex flex-col justify-center items-center z-10 ${
+              className={`my-2 py-5 h-[100%] flex flex-col items-center z-10 ${
                 animateIn2 && !animateOut
                   ? "animate__animated animate__fadeIn"
                   : "animate__animated animate__fadeOut"
@@ -458,7 +559,7 @@ export default function Home() {
                     ? "#F4DEA7"
                     : "#8CB9EA"
                 }
-                className={`mb-5 transition-1`}
+                className={`my-5 transition-1`}
               />
               <h4
                 className={`text-center px-5 text-${
@@ -525,7 +626,7 @@ export default function Home() {
                 </div>
 
                 <button
-                  className={`text-center text-white p-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1`}
+                  className={`text-center text-white p-5 bg-${bgColor} w-[100%] py-4  my-5 rounded-md transition-1`}
                   onClick={async () => {
                     if (payload.sender && payload.recipient) {
                       setAnimateIn2(false);
@@ -548,7 +649,7 @@ export default function Home() {
                 width={200}
                 height={200}
                 alt="LOVE"
-                className="absolute bottom-0 z-0"
+                className="absolute bottom-10 z-0"
               />
             </div>
           )}
@@ -647,6 +748,7 @@ export default function Home() {
                     navigation={true}
                     modules={[Navigation, Pagination]}
                     pagination={true}
+                    autoHeight
                   >
                     {sampleItems.map((item: any, index: number) => (
                       <SwiperSlide
@@ -663,15 +765,17 @@ export default function Home() {
                           <div className="border-white border-solid p-2 mx-4 rounded-lg border-2">
                             <Image
                               alt={item.title}
-                              width={50}
-                              height={50}
+                              width={25}
+                              height={25}
                               src={`/${item.image}`}
                               className="inline"
                             />
                           </div>
 
                           <h6>{item.title}</h6>
-                          <p className="text-[12px]">{item.message}</p>
+                          <p className="text-[10px] lg:text-[12px]">
+                            {item.message}
+                          </p>
                         </div>
                       </SwiperSlide>
                     ))}
@@ -688,7 +792,7 @@ export default function Home() {
                 </div>
 
                 <button
-                  className={`text-center text-white p-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1 relative z-10`}
+                  className={`text-center text-white p-5 bg-${bgColor} w-[100%] py-4 my-5 rounded-md transition-1 relative z-10`}
                   onClick={async () => {
                     if (payload.message) {
                       setAnimateIn2(false);
@@ -736,12 +840,120 @@ export default function Home() {
                 onImageSelect={handleImageSelect}
                 placeholderImg="/placeholder.png"
                 color={bgColor}
-                handleSubmit={() => console.log(payload)}
+                handleSubmit={handleSubmit}
               />
             </div>
           )}
+          {steps === 7 && (
+            <Lottie
+              loop
+              animationData={lottieProducts}
+              play
+              style={{ width: "100%", height: "100%" }}
+              className={`absolute top-0 left-0 right-0 bottom-0`}
+            />
+          )}
+          {steps === 8 && (
+            <>
+              <div className="w-[100%] p-4 relative z-10 ">
+                <button
+                  className={`text-center bg-white rounded-xl shadow-sm py-2 px-5 text-${
+                    bgColor === "red"
+                      ? "red-400"
+                      : bgColor === "yellow"
+                      ? "yellow-400"
+                      : "blue-400"
+                  }`}
+                  onClick={() => {
+                    setSteps(5);
+                  }}
+                >
+                  {"< Back"}
+                </button>
+              </div>
+              <div className="flex flex-col items-center justify-center relative z-10 gap-3 h-[100%] w-[100$]">
+                <div className="p-3 bg-white rounded-xl HpQrcode">
+                  <QRCode value={qrCodeUrl} size={200} className="" />
+                </div>
+                <div className="text-center px-4">
+                  <h4
+                    className={`text-${
+                      bgColor === "red"
+                        ? "red-400"
+                        : bgColor === "yellow"
+                        ? "yellow-400"
+                        : "blue-400"
+                    }`}
+                  >
+                    Share your card
+                  </h4>
+                  <p
+                    className={`text-${
+                      bgColor === "red"
+                        ? "red-400"
+                        : bgColor === "yellow"
+                        ? "yellow-400"
+                        : "blue-400"
+                    }`}
+                  >
+                    Share your card with your beloved friends or family
+                  </p>
+                </div>
+                <div className="px-4 w-[100%]">
+                  <button
+                    className={`bg-white w-[100%] py-3 px-4 rounded-md text-${
+                      bgColor === "red"
+                        ? "red-400"
+                        : bgColor === "yellow"
+                        ? "yellow-400"
+                        : "blue-400"
+                    }`}
+                    type="button"
+                    onClick={downloadQR}
+                  >
+                    Download
+                  </button>
+                  <div className="text-center my-5">
+                    <h3>
+                      <span
+                        className={`bg-white orline py-2 px-3 rounded-full  text-${
+                          bgColor === "red"
+                            ? "red-400"
+                            : bgColor === "yellow"
+                            ? "yellow-400"
+                            : "blue-400"
+                        }`}
+                      >
+                        Or
+                      </span>
+                    </h3>
+                  </div>
+                  <button
+                    className={`bg-white w-[100%] py-3 px-4 rounded-md text-${
+                      bgColor === "red"
+                        ? "red-400"
+                        : bgColor === "yellow"
+                        ? "yellow-400"
+                        : "blue-400"
+                    }`}
+                    type="button"
+                    onClick={copyToClipboard}
+                  >
+                    Copy Link
+                  </button>
+                </div>
+                {successMessage && (
+                  <p className="success-message">{successMessage}</p>
+                )}
+                {errorMessage && (
+                  <p className="error-message">{errorMessage}</p>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
-    </main>
+    </>
   );
-}
+};
+export default Index;

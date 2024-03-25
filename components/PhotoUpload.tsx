@@ -5,6 +5,7 @@ interface PhotoUploadProps {
   handleSubmit: () => void;
   placeholderImg: string;
   color: string;
+  className?: string;
 }
 
 const PhotoUpload: FC<PhotoUploadProps> = ({
@@ -12,6 +13,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
   handleSubmit,
   placeholderImg,
   color,
+  className,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -111,15 +113,15 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
     }
   };
 
-  // getVideoStream() function should be defined outside so it can be called both from useEffect and handleRetry
   const getVideoStream = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: { facingMode: "user" }, // This will request the front camera on a smartphone
       });
       setStream(mediaStream);
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
+        videoRef.current.style.transform = "scaleX(-1)"; // This will mirror the video
         await videoRef.current.play();
         setIsVideoReady(true);
       }
@@ -152,9 +154,6 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
       drawImageToCanvas(imageUrl);
       onImageSelect(file);
       setPhotoTaken(true);
-      // Clean up the object URL after drawing the image
-      // This needs to be done after the image has loaded and been drawn
-      // Thus it's better to put it in the `img.onload` of `drawImageToCanvas`
     }
   };
 
@@ -181,7 +180,10 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
       }
 
       ctx?.clearRect(0, 0, canvas.width, canvas.height);
-      ctx?.drawImage(video, drawX, drawY, drawWidth, drawHeight);
+      ctx?.save(); // Save the current state
+      ctx?.scale(-1, 1); // Mirror the canvas context
+      ctx?.drawImage(video, -drawX, drawY, drawWidth * -1, drawHeight); // Draw the mirrored frame
+      ctx?.restore(); // Restore the original state
     }
 
     // Request the next frame of the animation
@@ -194,23 +196,6 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
   }, [updateCanvas]);
 
   useEffect(() => {
-    const getVideoStream = async () => {
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        setStream(mediaStream);
-        if (videoRef.current) {
-          videoRef.current.srcObject = mediaStream;
-          await videoRef.current.play();
-          setIsVideoReady(true);
-        }
-      } catch (error) {
-        console.error(error);
-        drawPlaceholder();
-      }
-    };
-
     getVideoStream();
 
     return () => {
@@ -234,7 +219,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
   }, [updateCanvas]);
 
   return (
-    <div className="relative z-10 h-[100%] py-5 mt-10">
+    <div className={`relative z-10 h-[100%] py-5 mt-10 ${className}`}>
       <img alt="HeartLeft" src="/love2.png" className="absolute left-5 top-0" />
       <img
         alt="HeartLeft"

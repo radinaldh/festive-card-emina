@@ -1,4 +1,4 @@
-"use client";
+import { FC } from "react";
 
 interface ILogo {
   width?: any;
@@ -7,7 +7,7 @@ interface ILogo {
   className?: string;
 }
 
-export default function Logo({ width, height, color, className }: ILogo) {
+const Logo: FC<ILogo> = ({ width, height, color, className }) => {
   return (
     <svg
       width={width}
@@ -43,4 +43,6 @@ export default function Logo({ width, height, color, className }: ILogo) {
       />
     </svg>
   );
-}
+};
+
+export default Logo;

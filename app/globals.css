@@ -128,7 +128,7 @@ h6 {
 
 .kv-bg-red::before {
   content: "";
-  padding: 10px;
+  padding: 20px;
   background-color: var(--red);
   aspect-ratio: 1 / 1;
   display: block;
@@ -137,7 +137,7 @@ h6 {
 
 .kv-bg-yellow::before {
   content: "";
-  padding: 10px;
+  padding: 20px;
   background-color: var(--yellow);
   aspect-ratio: 1 / 1;
   display: block;
@@ -146,7 +146,7 @@ h6 {
 
 .kv-bg-blue::before {
   content: "";
-  padding: 10px;
+  padding: 20px;
   background-color: var(--blue);
   aspect-ratio: 1 / 1;
   display: block;
@@ -180,6 +180,14 @@ h6 {
 .text-red-400 {
   --tw-text-opacity: 1;
   color: rgb(237 91 91);
+}
+
+.success-message {
+  color: green;
+}
+
+.error-message {
+  color: red;
 }
 
 .text-blue-400 {
@@ -363,5 +371,34 @@ button[disabled] {
   }
   label {
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .kv-bg-red::before {
+    content: "";
+    padding: 10px;
+    background-color: var(--red);
+    aspect-ratio: 1 / 1;
+    display: block;
+    border-radius: 50%;
+  }
+
+  .kv-bg-yellow::before {
+    content: "";
+    padding: 10px;
+    background-color: var(--yellow);
+    aspect-ratio: 1 / 1;
+    display: block;
+    border-radius: 50%;
+  }
+
+  .kv-bg-blue::before {
+    content: "";
+    padding: 10px;
+    background-color: var(--blue);
+    aspect-ratio: 1 / 1;
+    display: block;
+    border-radius: 50%;
   }
 }

@@ -1,11 +1,10 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 
-interface LoadingHeartsProps {
+interface ILoadingHeartsProps {
   className?: string;
 }
 
-export default function LoadingHearts({ className }: LoadingHeartsProps) {
+const LoadingHearts: FC<ILoadingHeartsProps> = ({ className }) => {
   const totalHearts = 5; // Total number of hearts
   const [filledHearts, setFilledHearts] = useState(
     Array(totalHearts).fill(false)
@@ -44,4 +43,6 @@ export default function LoadingHearts({ className }: LoadingHeartsProps) {
       </div>
     </div>
   );
-}
+};
+
+export default LoadingHearts;

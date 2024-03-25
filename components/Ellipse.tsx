@@ -1,4 +1,4 @@
-"use client";
+import { FC } from "react";
 
 interface IEllipse {
   width?: any;
@@ -7,7 +7,7 @@ interface IEllipse {
   className?: string;
 }
 
-export default function Ellipse({ width, height, color, className }: IEllipse) {
+const Ellipse: FC<IEllipse> = ({ width, height, color, className }) => {
   return (
     <svg
       width="365"
@@ -33,4 +33,6 @@ export default function Ellipse({ width, height, color, className }: IEllipse) {
       </defs>
     </svg>
   );
-}
+};
+
+export default Ellipse;
