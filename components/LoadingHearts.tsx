@@ -35,7 +35,9 @@ const LoadingHearts: FC<ILoadingHeartsProps> = ({ className }) => {
 
   return (
     <div className={className}>
-      <h2 className="text-center mb-2 tracking-widest">Loading...</h2>
+      <h2 className="text-center mb-2 tracking-widest text-white">
+        Loading...
+      </h2>
       <div className="loading-container">
         {filledHearts.map((filled, index) => (
           <div key={index} className={`heart ${filled ? "filled" : ""}`} />
