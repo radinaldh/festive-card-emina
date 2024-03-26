@@ -96,8 +96,8 @@ const CardPage: NextPage<IProps> = ({ data }) => {
               <Image
                 src={data?.image_url}
                 alt="Card Image"
-                width={150}
-                height={150}
+                width={200}
+                height={200}
                 layout="responsive"
                 priority
                 className={`aspect-square object-cover rounded-md border-2 border-${

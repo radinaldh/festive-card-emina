@@ -175,12 +175,6 @@ const Index: NextPage = () => {
   };
 
   useEffect(() => {
-    if (renderAudioBg && audioRef.current) {
-      audioRef.current.volume = 0.2;
-    }
-  }, [renderAudioBg]);
-
-  useEffect(() => {
     const runAnimations = async () => {
       await wait(3000);
       setAnimateOut(true);
@@ -253,6 +247,7 @@ const Index: NextPage = () => {
               alt="Emina Logo"
               width={400}
               height={200}
+              layout="responsive"
               className={`animate__animated animate__slow ${
                 animateOut ? "animate__fadeOutDownBig" : "animate__fadeInUpBig"
               }`}
@@ -264,7 +259,7 @@ const Index: NextPage = () => {
         <div
           className={`${
             steps !== 5 && "flex flex-col"
-          } max-h-screen  justify-between h-[100vh] items-center w-[100%] overflow-hidden animate__animated relative transition-1 ${
+          } max-h-screen h-[100vh] justify-between  items-center w-[100%] overflow-hidden animate__animated relative transition-1 ${
             animateIn && "animate__fadeIn"
           } animate__slow bg-${bgColor}-opacity`}
         >
@@ -407,7 +402,6 @@ const Index: NextPage = () => {
                     onClick={async () => {
                       if (audioRef.current) {
                         audioRef.current.play();
-                        audioRef.current.volume = 0.2;
                       }
                       if (voiceRef.current) {
                         voiceRef.current.play();
@@ -416,6 +410,7 @@ const Index: NextPage = () => {
                         ...prev,
                         color: bgColor,
                       }));
+                      setRenderAudio(true);
                       setAnimateIn2(false);
                       setAnimateOut(true);
                       await wait(1000);
@@ -423,7 +418,6 @@ const Index: NextPage = () => {
                       setAnimateIn2(true);
                       setAnimateOut(false);
                       await wait(1000);
-                      setRenderAudio(true);
                     }}
                   >
                     Next
@@ -431,6 +425,12 @@ const Index: NextPage = () => {
                 </div>
               </div>
             </div>
+          )}
+          {renderAudio && (
+            <audio ref={voiceRef} controls={false} autoPlay className="hidden">
+              <source src="/voice_over.mp3" type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
           )}
           {steps === 2 && (
             <>
@@ -454,28 +454,26 @@ const Index: NextPage = () => {
                     : "-top-[100%] absolute"
                 }`}
               />
-              {renderAudio && (
-                <div
-                  className={`text-bubble absolute top-32 z-10 text-black p-5 text-justify mt-16 mx-5 ${
-                    animateOut && "animate__animated animate__fadeOut"
-                  }`}
-                >
-                  <TypeAnimation
-                    sequence={[
-                      "Hello Bestie! Yay, it's festive moment!",
-                      2000,
-                      "Nggak terasa ya sudah ramadhan lagi",
-                      1750,
-                      "Saatnya build connection dengan orang terdekat kalian!",
-                      1250,
-                      "Yuk kreasikan connection card kamu bareng, EMINA!",
-                    ]}
-                    wrapper="span"
-                    speed={80}
-                    style={{ fontSize: "1em", display: "inline-block" }}
-                  />
-                </div>
-              )}
+              <div
+                className={`text-bubble absolute top-32 z-10 text-black p-5 text-justify mt-16 mx-5 ${
+                  animateOut && "animate__animated animate__fadeOut"
+                }`}
+              >
+                <TypeAnimation
+                  sequence={[
+                    "Hello Bestie! Yay, it's festive moment!",
+                    2000,
+                    "Nggak terasa ya sudah ramadhan lagi",
+                    1750,
+                    "Saatnya build connection dengan orang terdekat kalian!",
+                    1250,
+                    "Yuk kreasikan connection card kamu bareng, EMINA!",
+                  ]}
+                  wrapper="span"
+                  speed={80}
+                  style={{ fontSize: "0.75em", display: "inline-block" }}
+                />
+              </div>
               <Lottie
                 loop
                 animationData={lottieChar}
@@ -491,43 +489,31 @@ const Index: NextPage = () => {
                     : "-bottom-[100%]"
                 }`}
               />
-              {renderAudio && (
-                <audio
-                  ref={voiceRef}
-                  controls={false}
-                  autoPlay
-                  className="hidden"
-                >
-                  <source src="/voice_over.mp3" type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
-              )}
-              {renderAudio && (
-                <button
-                  className={`text-center text-white m-5 p-5 bg-${bgColor} w-[80%] py-4 rounded-md transition-1 absolute bottom-0 ${
-                    animateIn2 && !animateOut
-                      ? "animate__animated animate__slow animate__fadeInUpBig"
-                      : !animateIn2 && !animateOut
-                      ? "-bottom-[100%] absolute"
-                      : !animateIn2 && animateOut
-                      ? "animate__animated animate__slow animate__fadeOutDownBig"
-                      : "-bottom-[100%] absolute"
-                  }`}
-                  onClick={async () => {
-                    setAnimateIn2(false);
-                    setAnimateOut(true);
-                    await wait(2000);
-                    setAnimateOut(false);
-                    setSteps(3);
-                    await wait(1000);
-                    setAnimateIn2(true);
-                    await wait(1000);
-                    setRenderAudio(false);
-                  }}
-                >
-                  Get Started
-                </button>
-              )}
+
+              <button
+                className={`text-center text-white m-5 p-5 bg-${bgColor} w-[80%] py-4 rounded-md transition-1 absolute bottom-0 ${
+                  animateIn2 && !animateOut
+                    ? "animate__animated animate__slow animate__fadeInUpBig"
+                    : !animateIn2 && !animateOut
+                    ? "-bottom-[100%] absolute"
+                    : !animateIn2 && animateOut
+                    ? "animate__animated animate__slow animate__fadeOutDownBig"
+                    : "-bottom-[100%] absolute"
+                }`}
+                onClick={async () => {
+                  setAnimateIn2(false);
+                  setAnimateOut(true);
+                  await wait(2000);
+                  setAnimateOut(false);
+                  setSteps(3);
+                  await wait(1000);
+                  setAnimateIn2(true);
+                  await wait(1000);
+                  setRenderAudio(false);
+                }}
+              >
+                Get Started
+              </button>
             </>
           )}
           {steps === 3 && (
@@ -780,15 +766,14 @@ const Index: NextPage = () => {
                       </SwiperSlide>
                     ))}
                   </Swiper>
-                  <div className="absolute w-[100%] text-center top-0 z-0">
-                    <Image
-                      src={"/love.png"}
-                      width={400}
-                      height={400}
-                      alt="LOVE"
-                      className="inline"
-                    />
-                  </div>
+
+                  <Image
+                    src={"/love.png"}
+                    width={400}
+                    height={400}
+                    alt="LOVE"
+                    className="absolute bottm-0 left-0 right-0"
+                  />
                 </div>
 
                 <button
@@ -864,8 +849,10 @@ const Index: NextPage = () => {
                       ? "yellow-400"
                       : "blue-400"
                   }`}
-                  onClick={() => {
-                    setSteps(5);
+                  onClick={async () => {
+                    setSteps(6);
+                    setAnimateIn2(true);
+                    setAnimateOut(false);
                   }}
                 >
                   {"< Back"}

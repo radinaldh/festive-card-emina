@@ -219,7 +219,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
   }, [updateCanvas]);
 
   return (
-    <div className={`relative z-10 h-[100%] py-5 mt-10 ${className}`}>
+    <div className={`relative z-10 h-[100%] py-5 mt-5 ${className}`}>
       <img alt="HeartLeft" src="/love2.png" className="absolute left-5 top-0" />
       <img
         alt="HeartLeft"
@@ -234,10 +234,10 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
       />
       {!photoTaken ? (
         <>
-          <div className="flex w-[100%] justify-between items-end my-4">
+          <div className="w-[100%] justify-between items-end my-4 flex animate__animated animate__fadeIn">
             <img alt="HeartLeft" width={50} height={50} src="/heart-left.png" />
             <h3
-              className={`text-${
+              className={`animate__animated animate__fadeIn text-center text-${
                 color === "red"
                   ? "red-400"
                   : color === "yellow"
@@ -255,7 +255,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             />
           </div>
           <p
-            className={`text-center text-${
+            className={`animate__animated animate__fadeIn text-center text-${
               color === "red"
                 ? "red-400"
                 : color === "yellow"
@@ -275,7 +275,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             onCanPlay={() => setIsVideoReady(true)}
           ></video>
           <button
-            className={`text-center text-white mt-5 bg-${color} w-[100%] py-4 rounded-md transition-1 flex justify-center items-center gap-1`}
+            className={`animate__animated animate__fadeIn text-center text-white mt-5 bg-${color} w-[100%] py-4 rounded-md transition-1 flex justify-center items-center gap-1`}
             onClick={takePhoto}
             disabled={!isVideoReady} // Disable the button until the video is ready
           >
@@ -301,7 +301,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             </svg>
             Take Photo
           </button>
-          <div className="text-center mt-5">
+          <div className="text-center mt-5 animate__animated animate__fadeIn">
             <h3>
               <span
                 className={`bg-white orline py-2 px-3 rounded-full  text-${
@@ -324,7 +324,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             style={{ display: "none" }}
           />
           <button
-            className={`text-center flex justify-center items-center gap-1 text-white mt-5 text-${
+            className={`animate__animated animate__fadeIn text-center flex justify-center items-center gap-1 text-white mt-5 text-${
               color === "red"
                 ? "red-400"
                 : color === "yellow"
@@ -362,7 +362,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
         </>
       ) : (
         <>
-          <div className="w-[100%] my-4 text-center">
+          <div className="w-[100%] my-4 text-center animate__animated animate__fadeIn">
             <h3
               className={`text-center text-${
                 color === "red"
@@ -376,7 +376,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             </h3>
           </div>
           <p
-            className={`text-center text-${
+            className={`animate__animated animate__fadeIn text-center text-${
               color === "red"
                 ? "red-400"
                 : color === "yellow"
@@ -387,7 +387,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             Reveal Your Beauty. Snap a photo and let your radiance shine. Share
             your essence with the world.
           </p>
-          <div className="flex justify-center mt-5 items-center gap-5">
+          <div className="animate__animated animate__fadeIn flex justify-center mt-5 items-center gap-5">
             <img alt="HeartLeft" width={75} height={75} src="/heart-left.png" />
             <button type="button" onClick={handleSubmit}>
               <svg
@@ -420,7 +420,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
               src="/heart-right.png"
             />
           </div>
-          <div className="text-center mt-5">
+          <div className="text-center mt-5 animate__animated animate__fadeIn">
             <h3>
               <span
                 className={`bg-white orline py-2 px-3 rounded-full  text-${
@@ -436,7 +436,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             </h3>
           </div>
           <button
-            className={`text-center flex justify-center items-center gap-1 text-white mt-5 text-${
+            className={`animate__animated animate__fadeIn text-center flex justify-center items-center gap-1 text-white mt-5 text-${
               color === "red"
                 ? "red-400"
                 : color === "yellow"
