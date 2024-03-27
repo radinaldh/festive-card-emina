@@ -220,10 +220,18 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
 
   return (
     <div className={`relative z-10 h-[100%] py-5 mt-5 ${className}`}>
-      <img alt="HeartLeft" src="/love2.png" className="absolute left-5 top-0" />
       <img
         alt="HeartLeft"
-        src="/love1.png"
+        width={50}
+        height={50}
+        src="/heart-left.png"
+        className="absolute left-5 top-0"
+      />
+      <img
+        alt="HeartRight"
+        width={50}
+        height={50}
+        src="/heart-right.png"
         className="absolute right-5 top-0"
       />
       <canvas
@@ -245,7 +253,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
                   : "blue-400"
               }`}
             >
-              Take Your Photo
+              <b>Take Your Photo</b>
             </h3>
             <img
               alt="HeartLeft"

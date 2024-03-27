@@ -110,12 +110,12 @@ const Index: NextPage = () => {
 
     try {
       let imageUrl = "";
-
-      // Check if `image_url` is an instance of File
+      setAnimateOut(true);
+      await wait(500);
+      setSteps(7);
       if (payload.image_url instanceof File) {
         imageUrl = await uploadImageAndGetURL(payload.image_url);
       }
-
       const cardData = {
         ...payload,
         image_url: imageUrl,
@@ -125,8 +125,7 @@ const Index: NextPage = () => {
 
       const generatedLink = `${process.env.NEXT_PUBLIC_URL}/card/${docId}`;
       setQrCodeUrl(generatedLink);
-      setSteps(7);
-      setAnimateOut(true);
+
       await wait(1000);
       setAnimateOut(false);
       setAnimateOut2(false);
@@ -162,11 +161,10 @@ const Index: NextPage = () => {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(qrCodeUrl);
-      setSuccessMessage("URL copied successfully!"); // Add a success message
+      setSuccessMessage("URL copied successfully!");
     } catch (error) {
-      setErrorMessage("Error copying URL: " + error); // Add an error message
+      setErrorMessage("Error copying URL: " + error);
     } finally {
-      // Optionally, clear any temporary messages after a short delay
       setTimeout(() => {
         setSuccessMessage("");
         setErrorMessage("");
@@ -206,15 +204,20 @@ const Index: NextPage = () => {
       };
       runsAnimations();
     }
+  }, [steps]);
+
+  useEffect(() => {
     if (steps === 7) {
       const runsAnimations = async () => {
         await wait(3000);
-        setSteps(8);
-        setAnimateIn(true);
+        if (!isSubmitting) {
+          setSteps(8);
+          setAnimateIn(true);
+        }
       };
       runsAnimations();
     }
-  }, [steps]);
+  }, [steps, isSubmitting]);
 
   return (
     <>
@@ -257,9 +260,9 @@ const Index: NextPage = () => {
       )}
       {steps !== 0 && (
         <div
-          className={`${
-            steps !== 5 && "flex flex-col"
-          } max-h-screen h-[100vh] justify-between  items-center w-[100%] overflow-hidden animate__animated relative transition-1 ${
+          className={`${steps !== 5 && "flex flex-col"} min-h-screen ${
+            steps !== 8 ? "justify-between" : "justify-center"
+          } items-center w-[100%] overflow-hidden animate__animated relative transition-1 ${
             animateIn && "animate__fadeIn"
           } animate__slow bg-${bgColor}-opacity`}
         >
@@ -320,8 +323,8 @@ const Index: NextPage = () => {
                 }`}
               >
                 <Logo
-                  width={100}
-                  height={50}
+                  width={200}
+                  height={100}
                   color={
                     bgColor === "red"
                       ? "#F78B93"
@@ -334,29 +337,30 @@ const Index: NextPage = () => {
                 <Image
                   src="/colors-of-connection.png"
                   alt="Emina Logo"
-                  width={200}
-                  height={100}
+                  width={400}
+                  height={200}
+                  layout="responsive"
                   className={`animate__animated animate__slow transition-1 ${
                     animateIn && "animate__zoomIn"
                   }`}
                 />
               </div>
               <div
-                className={`bg-white transition-1 ${
+                className={`bg-white transition-1 absolute ${
                   animateIn2 && !animateOut
-                    ? "animate__animated animate__slow animate__fadeInUpBig bottom-0 relative h-[50vh] "
+                    ? "animate__animated animate__slow animate__fadeInUpBig h-[30vh] bottom-0"
                     : !animateIn2 && !animateOut
-                    ? "-bottom-[100%] absolute"
+                    ? "-bottom-[100%]"
                     : !animateIn2 && animateOut
                     ? "animate__animated animate__slow animate__fadeOutDownBig"
-                    : "-bottom-[100%] absolute"
+                    : "-bottom-[100%]"
                 }  w-[100%] } `}
               >
                 <div className="px-10 pt-10 pb-40 text-center text-black">
                   <div className="flex justify-evenly absolute -top-[10%] w-[100%] left-0">
                     <div
-                      className={`bg-red-opacity cursor-pointer aspect-square rounded-lg ${
-                        bgColor === "red" && "border-white border-4"
+                      className={`bg-red-opacity cursor-pointer aspect-square rounded-lg transition-half ${
+                        bgColor === "red" && "border-white border-4 shadow-xl"
                       }`}
                     >
                       <div className="p-3 h-[100%] flex items-center">
@@ -367,8 +371,9 @@ const Index: NextPage = () => {
                       </div>
                     </div>
                     <div
-                      className={`bg-yellow-opacity cursor-pointer aspect-square rounded-lg ${
-                        bgColor === "yellow" && "border-white border-4"
+                      className={`bg-yellow-opacity cursor-pointer aspect-square rounded-lg transition-half ${
+                        bgColor === "yellow" &&
+                        "border-white border-4 shadow-xl"
                       }`}
                     >
                       <div className="p-3 h-[100%] flex items-center">
@@ -379,8 +384,8 @@ const Index: NextPage = () => {
                       </div>
                     </div>
                     <div
-                      className={`bg-blue-opacity cursor-pointer aspect-square rounded-lg ${
-                        bgColor === "blue" && "border-white border-4"
+                      className={`bg-blue-opacity cursor-pointer aspect-square rounded-lg transition-half ${
+                        bgColor === "blue" && "border-white border-4 shadow-xl"
                       }`}
                     >
                       <div className="p-3 h-[100%] flex items-center">
@@ -391,12 +396,17 @@ const Index: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                  <h3 className="mt-5">Choose Your Color!</h3>
-                  <p>
-                    Explore a spectrum of possibilities and select the shade
-                    that resonates with your inner self. Be authentic, be true.
-                    Your unique journey in color begins here!
-                  </p>
+                  <h3
+                    className={`mt-5 text-${
+                      bgColor === "red"
+                        ? "red-400"
+                        : bgColor === "yellow"
+                        ? "yellow-400"
+                        : "blue-400"
+                    }`}
+                  >
+                    <b>Choose Your Color!</b>
+                  </h3>
                   <button
                     className={`text-center text-white mt-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1`}
                     onClick={async () => {
@@ -550,13 +560,13 @@ const Index: NextPage = () => {
               <h4
                 className={`text-center px-5 text-${
                   bgColor === "red"
-                    ? "red-400"
+                    ? "red-500"
                     : bgColor === "yellow"
-                    ? "yellow-400"
-                    : "blue-400"
+                    ? "yellow-500"
+                    : "blue-500"
                 }`}
               >
-                Bestie mau bonding sama siapa nih?
+                <b>Bestie mau bonding sama siapa nih?</b>
               </h4>
               <div className="w-[100%] p-5 relative z-10">
                 <div className="input-icon">
@@ -635,7 +645,7 @@ const Index: NextPage = () => {
                 width={200}
                 height={200}
                 alt="LOVE"
-                className="absolute bottom-10 z-0"
+                className="absolute bottom-10 z-0 animate__animated animate__heartBeat animate__infinite animate__slower"
               />
             </div>
           )}
@@ -670,7 +680,7 @@ const Index: NextPage = () => {
                     width={75}
                     height={75}
                     src={`/hearts-2.png`}
-                    className="absolute inline left-10"
+                    className="absolute inline left-10 animate__animated animate__heartBeat animate__infinite animate__slower"
                   />
                   <Logo
                     width={75}
@@ -689,7 +699,7 @@ const Index: NextPage = () => {
                     width={75}
                     height={75}
                     src={`/hearts.png`}
-                    className="absolute inline right-10"
+                    className="absolute inline right-10 animate__animated animate__heartBeat animate__infinite animate__slower animate__delay-2s"
                   />
                 </div>
                 <h5
@@ -772,7 +782,7 @@ const Index: NextPage = () => {
                     width={400}
                     height={400}
                     alt="LOVE"
-                    className="absolute bottm-0 left-0 right-0"
+                    className="absolute bottm-0 left-0 right-0 animate__animated animate__pulse animate__infinite animate__slower"
                   />
                 </div>
 
@@ -840,7 +850,7 @@ const Index: NextPage = () => {
           )}
           {steps === 8 && (
             <>
-              <div className="w-[100%] p-4 relative z-10 ">
+              <div className="w-[100%] p-4 absolute top-0 left-0 z-10">
                 <button
                   className={`text-center bg-white rounded-xl shadow-sm py-2 px-5 text-${
                     bgColor === "red"
@@ -858,7 +868,7 @@ const Index: NextPage = () => {
                   {"< Back"}
                 </button>
               </div>
-              <div className="flex flex-col items-center justify-center relative z-10 gap-3 h-[100%] w-[100$]">
+              <div className="flex flex-col items-center h-[100%] justify-center relative z-10 gap-3 w-[100%]">
                 <div className="p-3 bg-white rounded-xl HpQrcode">
                   <QRCode value={qrCodeUrl} size={200} className="" />
                 </div>

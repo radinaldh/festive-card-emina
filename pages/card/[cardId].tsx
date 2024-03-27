@@ -110,13 +110,6 @@ const CardPage: NextPage<IProps> = ({ data }) => {
               />
             )}
             <Image
-              src={`/ketupat.png`}
-              alt="Card Image"
-              width={100}
-              height={100}
-              className="absolute right-0 -bottom-5 animate__animated animate__pulse animate__infinite animate__delay-2s animate__slow"
-            />
-            <Image
               src={`/chatbubble.png`}
               alt="Card Image"
               width={100}

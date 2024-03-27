@@ -32,6 +32,7 @@ html {
   display: flex;
   justify-content: center;
   background: rgb(253, 157, 161);
+  height: 100%;
 }
 
 body {
@@ -153,6 +154,10 @@ h6 {
   border-radius: 50%;
 }
 
+.transition-half {
+  transition: 0.5s;
+}
+
 .transition-1 {
   transition: 1s;
 }
@@ -198,6 +203,18 @@ h6 {
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: #efd799;
+}
+
+.text-red-500 {
+  color: rgb(205, 67, 67);
+}
+
+.text-blue-500 {
+  color: #7da9d8;
+}
+
+.text-yellow-500 {
+  color: #c7ae71;
 }
 
 .border-red {
@@ -377,7 +394,7 @@ button[disabled] {
 @media (max-width: 600px) {
   .kv-bg-red::before {
     content: "";
-    padding: 10px;
+    padding: 15px;
     background-color: var(--red);
     aspect-ratio: 1 / 1;
     display: block;
@@ -386,7 +403,7 @@ button[disabled] {
 
   .kv-bg-yellow::before {
     content: "";
-    padding: 10px;
+    padding: 15px;
     background-color: var(--yellow);
     aspect-ratio: 1 / 1;
     display: block;
@@ -395,7 +412,7 @@ button[disabled] {
 
   .kv-bg-blue::before {
     content: "";
-    padding: 10px;
+    padding: 15px;
     background-color: var(--blue);
     aspect-ratio: 1 / 1;
     display: block;
