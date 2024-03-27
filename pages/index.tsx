@@ -357,7 +357,7 @@ const Index: NextPage = () => {
                 }  w-[100%] } `}
               >
                 <div className="px-10 pt-10 pb-40 text-center text-black">
-                  <div className="flex justify-evenly absolute -top-[10%] w-[100%] left-0">
+                  <div className="flex justify-evenly absolute md:-top-[10%] -top-[20%] w-[100%] left-0">
                     <div
                       className={`bg-red-opacity cursor-pointer aspect-square rounded-lg transition-half ${
                         bgColor === "red" && "border-white border-4 shadow-xl"

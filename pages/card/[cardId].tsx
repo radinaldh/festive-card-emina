@@ -91,16 +91,12 @@ const CardPage: NextPage<IProps> = ({ data }) => {
         <div
           className={`flex flex-col justify-center items-center w-[100%] h-[100%] p-5 relative z-10`}
         >
-          <div className="px-10 relative">
+          <div className="px-5 relative">
             {data?.image_url && (
-              <Image
+              <img
                 src={data?.image_url}
                 alt="Card Image"
-                width={200}
-                height={200}
-                layout="responsive"
-                priority
-                className={`aspect-square object-cover rounded-md border-2 border-${
+                className={`w-[100%] aspect-square object-cover rounded-md border-2 border-${
                   data?.color === "red"
                     ? "red"
                     : data?.color === "yellow"
