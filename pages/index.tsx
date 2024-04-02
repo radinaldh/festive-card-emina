@@ -788,7 +788,7 @@ const Index: NextPage = () => {
                       <div
                         className={`rounded-2xl text-center py-5 transition-1 ${
                           activeIndex === index ? "shadow-xl" : "shadow-sm"
-                        } text-${bgColor}-400 bg-gradient w-[100%] shadow-md cursor-pointer`}
+                        } text-black bg-gradient w-[100%] shadow-md cursor-pointer`}
                         key={index}
                         onClick={() => handleMessage(index, item)}
                       >
