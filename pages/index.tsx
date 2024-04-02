@@ -12,7 +12,7 @@ import "animate.css";
 import { NextPage } from "next";
 import Image from "next/image";
 import QRCode from "qrcode.react";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import { TypeAnimation } from "react-type-animation";
 import "swiper/css";
@@ -54,25 +54,12 @@ const sampleItems = [
     title: "Inspiring",
     message: "Architecture can inspire us in many ways.",
   },
-  {
-    image: "happy.png", // Random animal image
-    title: "Happy",
-    message: "Just a random happy animal.",
-  },
-  {
-    image: "funny.png", // Random nature image
-    title: "Joyful",
-    message: "Nature is always a joy to look at.",
-  },
-  {
-    image: "warm.png", // Random architecture image
-    title: "Inspiring",
-    message: "Architecture can inspire us in many ways.",
-  },
 ];
 
 const Index: NextPage = () => {
   const [steps, setSteps] = useState(0);
+  const [char, setChar] = useState(0);
+  const [chat, setChat] = useState<any[]>([]);
   const [animateIn, setAnimateIn] = useState<boolean>(false);
   const [animateIn2, setAnimateIn2] = useState<boolean>(false);
   const [animateOut, setAnimateOut] = useState<boolean>(false);
@@ -81,6 +68,7 @@ const Index: NextPage = () => {
   const [renderAudioBg, setRenderAudioBg] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [bgColor, setBgColor] = useState<string>("red");
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [payload, setPayload] = useState<IPayload>(initialPayload);
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
   const [uploadError, setUploadError] = useState("");
@@ -172,6 +160,14 @@ const Index: NextPage = () => {
     }
   };
 
+  const handleMessage = (index: number, item: any) => {
+    setPayload({
+      ...payload,
+      message: item.message,
+    });
+    setActiveIndex(index); // Set the clicked item as active
+  };
+
   useEffect(() => {
     const runAnimations = async () => {
       await wait(3000);
@@ -194,15 +190,32 @@ const Index: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    if (steps === 3) {
+    if (char > 6) {
       const runsAnimations = async () => {
-        await wait(4000);
-        setAnimateOut(true);
+        setAnimateOut(false);
         await wait(1000);
         setSteps(4);
-        setAnimateOut(false);
       };
       runsAnimations();
+    }
+  }, [char]);
+
+  useEffect(() => {
+    const runChats = async () => {
+      const messages = [
+        "Hello Bestie! Yay, it's festive moment!",
+        "Nggak terasa ya sudah ramadhan lagi",
+        ["Saatnya build connection dengan", "orang terdekat kalian!"],
+        ["Yuk kreasikan connection card", "kamu bareng, EMINA!"],
+      ];
+      for (let i = 0; i < messages.length; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+        setChat((currentChat: any) => [...currentChat, messages[i]]); // Append new message
+      }
+    };
+
+    if (steps === 2) {
+      runChats();
     }
   }, [steps]);
 
@@ -465,30 +478,38 @@ const Index: NextPage = () => {
                 }`}
               />
               <div
-                className={`text-bubble absolute top-32 z-10 text-black p-5 text-justify mt-16 mx-5 ${
+                className={`absolute flex flex-col gap-5 top-24 right-0 z-10 text-black text-justify mt-16 mx-5 items-end ${
                   animateOut && "animate__animated animate__fadeOut"
                 }`}
               >
-                <TypeAnimation
-                  sequence={[
-                    "Hello Bestie! Yay, it's festive moment!",
-                    2000,
-                    "Nggak terasa ya sudah ramadhan lagi",
-                    1750,
-                    "Saatnya build connection dengan orang terdekat kalian!",
-                    1250,
-                    "Yuk kreasikan connection card kamu bareng, EMINA!",
-                  ]}
-                  wrapper="span"
-                  speed={80}
-                  style={{ fontSize: "0.75em", display: "inline-block" }}
-                />
+                {chat.map((message, index) =>
+                  Array.isArray(message) ? (
+                    <span
+                      key={index}
+                      className="text-bubble p-5 text-end animate__animated animate__fadeIn"
+                    >
+                      {message.map((part, partIndex) => (
+                        <React.Fragment key={partIndex}>
+                          {part}
+                          {partIndex < message.length - 1 && <br />}
+                        </React.Fragment>
+                      ))}
+                    </span>
+                  ) : (
+                    <span
+                      key={index}
+                      className="text-bubble p-5 text-end animate__animated animate__fadeIn"
+                    >
+                      {message}
+                    </span>
+                  )
+                )}
               </div>
               <Lottie
                 loop
                 animationData={lottieChar}
                 play
-                style={{ width: "100%", height: "95%" }}
+                style={{ width: "100%", height: "85%" }}
                 className={`absolute ${
                   animateIn2 && !animateOut
                     ? "animate__animated animate__slow animate__fadeInUpBig top-0 "
@@ -527,15 +548,41 @@ const Index: NextPage = () => {
             </>
           )}
           {steps === 3 && (
-            <Lottie
-              loop={false}
-              animationData={lottieSnake}
-              play
-              style={{ width: "100%", height: "100%" }}
-              className={`absolute animate__animated animate__fast ${
-                !animateOut ? "animate__fadeIn" : "animate__fadeOut"
-              } bottom-0 top-0 left-0 right-0`}
-            />
+            <div
+              className={`animate__animated animate__slow relative w-[100%] ${
+                char === 0 ? "animate__fadeIn" : char > 6 && "animate__fadeOut"
+              } `}
+              onClick={() => setChar((i: any) => i + 1)}
+            >
+              <img src="/snakeBg.png" className="w-[100%]" />
+              <img
+                src="/char.png"
+                className={`absolute w-[30%] transition-1 ${
+                  char === 0
+                    ? "bottom-[7%] left-2"
+                    : char === 1
+                    ? "bottom-[7%] left-[65%]"
+                    : char === 2
+                    ? "bottom-[26%] left-[65%]"
+                    : char === 3
+                    ? "bottom-[26%] left-2"
+                    : char === 4
+                    ? "bottom-[49%] left-2"
+                    : char === 5
+                    ? "bottom-[49%] left-[65%]"
+                    : char === 6
+                    ? "bottom-[74%] left-[65%]"
+                    : "bottom-[74%] left-2"
+                }`}
+              />
+              <div className="absolute bottom-3 w-[100%] px-5">
+                <button
+                  className={`text-center text-white p-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1 animate__animated animate__pulse animate__infinite`}
+                >
+                  <strong>Tap the screen!</strong>
+                </button>
+              </div>
+            </div>
           )}
           {steps === 4 && (
             <div
@@ -736,46 +783,32 @@ const Index: NextPage = () => {
                   </label>
                 </div>
                 <div className="relative">
-                  <Swiper
-                    spaceBetween={15}
-                    slidesPerView={3}
-                    className="my-5"
-                    centeredSlides={true}
-                    navigation={true}
-                    modules={[Navigation, Pagination]}
-                    pagination={true}
-                    autoHeight
-                  >
+                  <div className="flex justify-center items-stretch gap-3 w-[100%] my-4">
                     {sampleItems.map((item: any, index: number) => (
-                      <SwiperSlide
+                      <div
+                        className={`rounded-2xl text-center py-5 transition-1 ${
+                          activeIndex === index ? "shadow-xl" : "shadow-sm"
+                        } text-${bgColor}-400 bg-gradient w-[100%] shadow-md cursor-pointer`}
                         key={index}
-                        onClick={() =>
-                          setPayload((prev: any) => ({
-                            ...prev,
-                            message: item.message,
-                          }))
-                        }
-                        className="cursor-pointer"
+                        onClick={() => handleMessage(index, item)}
                       >
-                        <div className="bg-white rounded-2xl text-center py-5 shadow-sm text-white bg-gradient h-[100%]">
-                          <div className="border-white border-solid p-2 mx-4 rounded-lg border-2">
-                            <Image
-                              alt={item.title}
-                              width={25}
-                              height={25}
-                              src={`/${item.image}`}
-                              className="inline"
-                            />
-                          </div>
-
-                          <h6>{item.title}</h6>
-                          <p className="text-[10px] lg:text-[12px]">
-                            {item.message}
-                          </p>
+                        <div className={`p-2 mx-2`}>
+                          <Image
+                            alt={item.title}
+                            width={25}
+                            height={25}
+                            src={`/${item.image}`}
+                            className="inline"
+                          />
                         </div>
-                      </SwiperSlide>
+
+                        <h6>{item.title}</h6>
+                        <p className="text-[10px] lg:text-[12px]">
+                          {item.message}
+                        </p>
+                      </div>
                     ))}
-                  </Swiper>
+                  </div>
 
                   <Image
                     src={"/love.png"}

@@ -44,8 +44,6 @@ const CardPage: NextPage<IProps> = ({ data }) => {
     }
   }, [data]);
 
-  console.log(steps);
-
   const textColor = `text-${
     data?.color === "red"
       ? "red-400"
@@ -56,7 +54,7 @@ const CardPage: NextPage<IProps> = ({ data }) => {
 
   return (
     <div
-      className={`relative z-10 flex flex-col max-h-screen  justify-between h-[100vh] items-center w-[100%] overflow-hidden animate__animated transition-1 animate__slow bg-${data?.color}-opacity`}
+      className={`relative z-10 flex flex-col min-h-screen justify-center items-center w-[100%] overflow-x-hidden animate__animated transition-1 animate__slow bg-${data?.color}-opacity`}
     >
       <Ellipse
         className="absolute top-0 right-0 transition-1 z-0"
@@ -91,12 +89,12 @@ const CardPage: NextPage<IProps> = ({ data }) => {
         <div
           className={`flex flex-col justify-center items-center w-[100%] h-[100%] p-5 relative z-10`}
         >
-          <div className="px-5 relative">
+          <div className="px-5 relative text-center">
             {data?.image_url && (
               <img
                 src={data?.image_url}
                 alt="Card Image"
-                className={`w-[100%] aspect-square object-cover rounded-md border-2 border-${
+                className={`w-[90%] aspect-square object-cover rounded-md m-auto border-2 border-${
                   data?.color === "red"
                     ? "red"
                     : data?.color === "yellow"
@@ -160,6 +158,59 @@ const CardPage: NextPage<IProps> = ({ data }) => {
               </defs>
             </svg>
             <p className={`${textColor} py-5`}>Message: {data?.message}</p>
+          </div>
+          <div className={`flex gap-2 justify-center items-stretch`}>
+            <img
+              alt="HeartLeft"
+              width={50}
+              src="/heart-left.png"
+              className={`aspect-square object-contain ${
+                animateIn &&
+                "animate__animated animate__bounceInLeft animate__delay-3s"
+              }`}
+            />
+
+            <a
+              href="https://www.instagram.com/reel/C4u3fhtp0ik/?igsh=MW1sZ282aGowcTdnYw=="
+              className={`text-center mt-5 border-4 border-${
+                data?.color
+              } text-${
+                data?.color
+              }-400 w-[100%] py-4 px-5 rounded-md transition-1 ${
+                animateIn &&
+                "animate__animated animate__zoomIn animate__delay-3s"
+              }`}
+              target="_blank"
+            >
+              <strong>
+                Makeup <br /> inspo
+              </strong>
+            </a>
+            <a
+              href="https://www.instagram.com/reel/C4xCDdbJTtN/?igsh=OWcwcmdrdWt4ZGFt"
+              className={`text-center mt-5 border-4 border-${
+                data?.color
+              } text-${
+                data?.color
+              }-400 w-[100%] py-4 px-5 rounded-md transition-1 ${
+                animateIn &&
+                "animate__animated animate__zoomIn animate__delay-3s"
+              }`}
+              target="_blank"
+            >
+              <strong>
+                OOTD <br /> inspo
+              </strong>
+            </a>
+            <img
+              alt="HeartRight"
+              width={50}
+              src="/heart-right.png"
+              className={`aspect-square object-contain ${
+                animateIn &&
+                "animate__animated animate__bounceInLeft animate__delay-3s"
+              }`}
+            />
           </div>
           <button
             className={`text-center text-white mt-5 bg-${
