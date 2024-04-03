@@ -15,6 +15,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import LoadingHearts from "../components/LoadingHearts";
 import Head from "next/head";
+import moment from "moment";
 
 interface IPayload {
   sender: string;
@@ -123,21 +124,104 @@ const Index: NextPage = () => {
     }
   };
 
-  const downloadQR = () => {
-    let canvas = document.querySelector(
+  // const shareQR = async () => {
+  //   if (navigator.share) {
+  //     try {
+  //       // Here we're sharing the URL encoded in the QR code
+  //       await navigator.share({
+  //         title: "Check out this card",
+  //         text: "I wanted to share this card with you:",
+  //         url: qrCodeUrl, // This is the URL you're encoding in your QR code
+  //       });
+  //       console.log("Card shared successfully");
+  //     } catch (error) {
+  //       console.error("Error sharing the card:", error);
+  //     }
+  //   } else {
+  //     // Fallback for browsers that do not support the Web Share API
+  //     alert("Web Share API is not supported in this browser.");
+  //   }
+  // };
+
+  // const downloadQR = () => {
+  //   let canvas = document.querySelector(
+  //     ".HpQrcode > canvas"
+  //   ) as HTMLCanvasElement;
+  //   if (canvas) {
+  //     const pngUrl = canvas
+  //       .toDataURL("image/png")
+  //       .replace("image/png", "image/octet-stream");
+  //     let downloadLink = document.createElement("a");
+  //     downloadLink.href = pngUrl;
+  //     downloadLink.download = `${payload.sender}_${payload.recipient}.png`;
+  //     document.body.appendChild(downloadLink);
+  //     downloadLink.click();
+  //     document.body.removeChild(downloadLink);
+  //   }
+  // };
+
+  const shareQRImage = async () => {
+    const originalCanvas = document.querySelector(
       ".HpQrcode > canvas"
     ) as HTMLCanvasElement;
-    if (canvas) {
-      const pngUrl = canvas
-        .toDataURL("image/png")
-        .replace("image/png", "image/octet-stream");
-      let downloadLink = document.createElement("a");
-      downloadLink.href = pngUrl;
-      downloadLink.download = `${payload.sender}_${payload.recipient}.png`;
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+    if (!originalCanvas) {
+      console.error("QR Code canvas not found.");
+      return;
     }
+
+    const padding = 20; // amount of padding for white space
+    const textHeight = 30; // estimated height for the text
+    const captionText = "Emina Connection Card"; // your caption
+
+    // Create new canvas with extra space for padding and text
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = originalCanvas.width + padding * 2;
+    canvas.height = originalCanvas.height + padding * 2 + textHeight;
+
+    if (!ctx) {
+      console.error("Failed to get canvas context.");
+      return;
+    }
+
+    // Draw the white background
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw the original QR code on the new canvas, centered
+    ctx.drawImage(originalCanvas, padding, padding);
+
+    // Add caption text
+    ctx.fillStyle = "#000000"; // text color
+    ctx.textAlign = "center";
+    ctx.font = "12px Arial"; // modify as needed
+    ctx.fillText(
+      captionText,
+      canvas.width / 2,
+      originalCanvas.height + padding * 1.5 + textHeight
+    );
+
+    // Convert the new canvas to a blob and share
+    canvas.toBlob(async (blob) => {
+      if (!blob) {
+        console.error("Failed to convert canvas to Blob.");
+        return;
+      }
+
+      const fileName = `qr-code.png`;
+      const file = new File([blob], fileName, { type: "image/png" });
+
+      try {
+        await navigator.share({
+          files: [file],
+          title: "QR Code",
+          text: "Check out this connection card I made using from Emina",
+        });
+        console.log("QR code with caption shared successfully");
+      } catch (error) {
+        console.error("Error sharing the QR code with caption:", error);
+      }
+    }, "image/png");
   };
 
   const copyToClipboard = async () => {
@@ -980,9 +1064,9 @@ const Index: NextPage = () => {
                         : "blue-400"
                     }`}
                     type="button"
-                    onClick={downloadQR}
+                    onClick={shareQRImage}
                   >
-                    Download
+                    Share QR
                   </button>
                   <div className="text-center my-5">
                     <h3>
