@@ -6,7 +6,6 @@ import EllipseRevert from "@/components/EllipseRevert";
 import Logo from "@/components/Logo";
 import PhotoUpload from "@/components/PhotoUpload";
 import lottieChar from "@/public/character_intro.json";
-import lottieSnake from "@/public/snake_ladder.json";
 import lottieProducts from "@/public/products.json";
 import "animate.css";
 import { NextPage } from "next";
@@ -14,12 +13,6 @@ import Image from "next/image";
 import QRCode from "qrcode.react";
 import React, { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
-import { TypeAnimation } from "react-type-animation";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import { Navigation, Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
 import LoadingHearts from "../components/LoadingHearts";
 
 interface IPayload {
@@ -521,6 +514,22 @@ const Index: NextPage = () => {
                 }`}
               />
 
+              <Image
+                src={"/love.png"}
+                width={200}
+                height={200}
+                alt="LOVE"
+                className={`absolute bottom-10 z-0 right-2 ${
+                  animateIn2 && !animateOut
+                    ? "animate__animated animate__slow animate__fadeInUpBig"
+                    : !animateIn2 && !animateOut
+                    ? "-bottom-[100%] absolute"
+                    : !animateIn2 && animateOut
+                    ? "animate__animated animate__slow animate__fadeOutDownBig"
+                    : "-bottom-[100%] absolute"
+                }`}
+              />
+
               <button
                 className={`text-center text-white m-5 p-5 bg-${bgColor} w-[80%] py-4 rounded-md transition-1 absolute bottom-0 ${
                   animateIn2 && !animateOut
@@ -554,7 +563,7 @@ const Index: NextPage = () => {
               } `}
               onClick={() => setChar((i: any) => i + 1)}
             >
-              <img src="/snakeBg.png" className="w-[100%]" />
+              <img src="/snakeBg.png" className="w-[100%]" alt="emina" />
               <img
                 src="/char.png"
                 className={`absolute w-[30%] transition-1 ${
@@ -574,6 +583,7 @@ const Index: NextPage = () => {
                     ? "bottom-[74%] left-[65%]"
                     : "bottom-[74%] left-2"
                 }`}
+                alt="emina char"
               />
               <div className="absolute bottom-3 w-[100%] px-5">
                 <button

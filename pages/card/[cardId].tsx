@@ -208,7 +208,7 @@ const CardPage: NextPage<IProps> = ({ data }) => {
               src="/heart-right.png"
               className={`aspect-square object-contain ${
                 animateIn &&
-                "animate__animated animate__bounceInLeft animate__delay-3s"
+                "animate__animated animate__bounceInRight animate__delay-3s"
               }`}
             />
           </div>
