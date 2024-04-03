@@ -124,41 +124,41 @@ const Index: NextPage = () => {
     }
   };
 
-  // const shareQR = async () => {
-  //   if (navigator.share) {
-  //     try {
-  //       // Here we're sharing the URL encoded in the QR code
-  //       await navigator.share({
-  //         title: "Check out this card",
-  //         text: "I wanted to share this card with you:",
-  //         url: qrCodeUrl, // This is the URL you're encoding in your QR code
-  //       });
-  //       console.log("Card shared successfully");
-  //     } catch (error) {
-  //       console.error("Error sharing the card:", error);
-  //     }
-  //   } else {
-  //     // Fallback for browsers that do not support the Web Share API
-  //     alert("Web Share API is not supported in this browser.");
-  //   }
-  // };
+  const shareQR = async () => {
+    if (navigator.share) {
+      try {
+        // Here we're sharing the URL encoded in the QR code
+        await navigator.share({
+          title: "Check out this card",
+          text: "I wanted to share this card with you:",
+          url: qrCodeUrl, // This is the URL you're encoding in your QR code
+        });
+        console.log("Card shared successfully");
+      } catch (error) {
+        console.error("Error sharing the card:", error);
+      }
+    } else {
+      // Fallback for browsers that do not support the Web Share API
+      alert("Web Share API is not supported in this browser.");
+    }
+  };
 
-  // const downloadQR = () => {
-  //   let canvas = document.querySelector(
-  //     ".HpQrcode > canvas"
-  //   ) as HTMLCanvasElement;
-  //   if (canvas) {
-  //     const pngUrl = canvas
-  //       .toDataURL("image/png")
-  //       .replace("image/png", "image/octet-stream");
-  //     let downloadLink = document.createElement("a");
-  //     downloadLink.href = pngUrl;
-  //     downloadLink.download = `${payload.sender}_${payload.recipient}.png`;
-  //     document.body.appendChild(downloadLink);
-  //     downloadLink.click();
-  //     document.body.removeChild(downloadLink);
-  //   }
-  // };
+  const downloadQR = () => {
+    let canvas = document.querySelector(
+      ".HpQrcode > canvas"
+    ) as HTMLCanvasElement;
+    if (canvas) {
+      const pngUrl = canvas
+        .toDataURL("image/png")
+        .replace("image/png", "image/octet-stream");
+      let downloadLink = document.createElement("a");
+      downloadLink.href = pngUrl;
+      downloadLink.download = `${payload.sender}_${payload.recipient}.png`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+  };
 
   const shareQRImage = async () => {
     const originalCanvas = document.querySelector(
@@ -1065,9 +1065,9 @@ const Index: NextPage = () => {
                         : "blue-400"
                     }`}
                     type="button"
-                    onClick={shareQRImage}
+                    onClick={shareQR}
                   >
-                    Share QR
+                    Share Link
                   </button>
                   <div className="text-center my-5">
                     <h3>
@@ -1084,25 +1084,40 @@ const Index: NextPage = () => {
                       </span>
                     </h3>
                   </div>
-                  <button
-                    className={`text-white w-[100%] py-3 px-4 rounded-md bg-${
-                      bgColor === "red"
-                        ? "red"
-                        : bgColor === "yellow"
-                        ? "yellow"
-                        : "blue"
-                    }`}
-                    type="button"
-                    onClick={copyToClipboard}
-                  >
-                    {successMessage && (
-                      <p className="success-message">{successMessage}</p>
-                    )}
-                    {errorMessage && (
-                      <p className="error-message">{errorMessage}</p>
-                    )}
-                    {!successMessage && !errorMessage && <>Copy Link</>}
-                  </button>
+                  <div className="flex w-[100%] gap-3">
+                    <button
+                      className={`text-white w-[100%] py-3 px-4 rounded-md bg-${
+                        bgColor === "red"
+                          ? "red"
+                          : bgColor === "yellow"
+                          ? "yellow"
+                          : "blue"
+                      }`}
+                      type="button"
+                      onClick={copyToClipboard}
+                    >
+                      {successMessage && (
+                        <p className="success-message">{successMessage}</p>
+                      )}
+                      {errorMessage && (
+                        <p className="error-message">{errorMessage}</p>
+                      )}
+                      {!successMessage && !errorMessage && <>Copy Link</>}
+                    </button>
+                    <button
+                      className={`text-white w-[100%] py-3 px-4 rounded-md bg-${
+                        bgColor === "red"
+                          ? "red"
+                          : bgColor === "yellow"
+                          ? "yellow"
+                          : "blue"
+                      }`}
+                      type="button"
+                      onClick={downloadQR}
+                    >
+                      Download Image
+                    </button>
+                  </div>
                 </div>
               </div>
             </>
