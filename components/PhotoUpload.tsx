@@ -46,6 +46,17 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
     if (canvasRef.current && videoRef.current && isVideoReady) {
       const ctx = canvasRef.current.getContext("2d");
       if (ctx) {
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+
+        // Save the current state of the context
+        ctx.save();
+
+        // Mirror the image
+        ctx.scale(-1, 1); // Flip the canvas context horizontally
+        ctx.translate(-canvasRef.current.width, 0); // Move the canvas context back into the correct position
+
+        // Draw the mirrored video frame onto the canvas
         ctx.drawImage(
           videoRef.current,
           0,
@@ -53,11 +64,16 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
           canvasRef.current.width,
           canvasRef.current.height
         );
+
+        // Restore the canvas context to its original state
+        ctx.restore();
+
+        // Proceed with creating a blob and a File from the canvas
         canvasRef.current.toBlob((blob) => {
           if (blob) {
             const file = new File(
               [blob],
-              `${sender}_photo_${moment().format("MMMM-dd-YY")}_${Math.floor(
+              `${sender}_photo_${moment().format("MMMM-DD-YY")}_${Math.floor(
                 Math.random() * 100
               )}.png`,
               {
@@ -68,6 +84,8 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             onImageSelect(file);
           }
         }, "image/png");
+
+        // Pause the video and indicate that the video is no longer ready for another snapshot
         videoRef.current.pause();
         setIsVideoReady(false);
       }
