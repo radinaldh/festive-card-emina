@@ -266,7 +266,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
       />
       <canvas
         ref={canvasRef}
-        className="rounded-lg mx-auto object-contain w-[100%] h-auto aspect-square"
+        className="rounded-lg mx-auto object-contain w-[100%] h-[250px] aspect-square"
       />
       {!photoTaken ? (
         <>
