@@ -216,7 +216,7 @@ const Index: NextPage = () => {
         await navigator.share({
           files: [file],
           title: "QR Code",
-          text: "Check out this connection card I made using from Emina",
+          text: "Check out this connection card I made using Emina Festive Connection Card",
         });
         console.log("QR code with caption shared successfully");
       } catch (error) {
@@ -228,7 +228,7 @@ const Index: NextPage = () => {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(qrCodeUrl);
-      setSuccessMessage("URL copied successfully!");
+      setSuccessMessage("Copied!");
     } catch (error) {
       setErrorMessage("Error copying URL: " + error);
     } finally {
@@ -639,7 +639,7 @@ const Index: NextPage = () => {
               />
 
               <button
-                className={`text-center text-white m-5 p-5 bg-${bgColor} w-[80%] py-4 rounded-md transition-1 absolute bottom-3 ${
+                className={`text-center text-white m-5 p-5 bg-${bgColor} w-[80%] py-4 rounded-md transition-1 absolute bottom-5 ${
                   animateIn2 && !animateOut
                     ? "animate__animated animate__slow animate__fadeInUpBig"
                     : !animateIn2 && !animateOut
@@ -1130,9 +1130,7 @@ const Index: NextPage = () => {
                       type="button"
                       onClick={copyToClipboard}
                     >
-                      {successMessage && (
-                        <p className="success-message">{successMessage}</p>
-                      )}
+                      {successMessage && <p>{successMessage}</p>}
                       {errorMessage && (
                         <p className="error-message">{errorMessage}</p>
                       )}
