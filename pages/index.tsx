@@ -1056,19 +1056,34 @@ const Index: NextPage = () => {
                   </p>
                 </div>
                 <div className="px-4 w-[100%]">
-                  <button
-                    className={`bg-white w-[100%] py-3 px-4 rounded-md text-${
-                      bgColor === "red"
-                        ? "red-400"
-                        : bgColor === "yellow"
-                        ? "yellow-400"
-                        : "blue-400"
-                    }`}
-                    type="button"
-                    onClick={shareQR}
-                  >
-                    Share Link
-                  </button>
+                  <div className="flex w-[100%] gap-3">
+                    <button
+                      className={`bg-white w-[100%] py-3 px-4 rounded-md text-${
+                        bgColor === "red"
+                          ? "red-400"
+                          : bgColor === "yellow"
+                          ? "yellow-400"
+                          : "blue-400"
+                      }`}
+                      type="button"
+                      onClick={shareQR}
+                    >
+                      Share Link
+                    </button>
+                    <button
+                      className={`bg-white w-[100%] py-3 px-4 rounded-md text-${
+                        bgColor === "red"
+                          ? "red-400"
+                          : bgColor === "yellow"
+                          ? "yellow-400"
+                          : "blue-400"
+                      }`}
+                      type="button"
+                      onClick={shareQRImage}
+                    >
+                      Share QR
+                    </button>
+                  </div>
                   <div className="text-center my-5">
                     <h3>
                       <span
@@ -1115,7 +1130,7 @@ const Index: NextPage = () => {
                       type="button"
                       onClick={downloadQR}
                     >
-                      Download Image
+                      Download QR
                     </button>
                   </div>
                 </div>
