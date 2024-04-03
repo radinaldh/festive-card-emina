@@ -311,6 +311,25 @@ const Index: NextPage = () => {
     }
   }, [steps, isSubmitting]);
 
+  useEffect(() => {
+    // Define the function to toggle audio based on document visibility
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        audioRef.current?.pause();
+      } else {
+        audioRef.current?.play();
+      }
+    };
+
+    // Add event listener for visibility change
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   return (
     <>
       <Head>
@@ -443,7 +462,7 @@ const Index: NextPage = () => {
               <div
                 className={`bg-white transition-1 absolute ${
                   animateIn2 && !animateOut
-                    ? "animate__animated animate__slow animate__fadeInUpBig h-[30vh] bottom-0"
+                    ? "animate__animated animate__slow animate__fadeInUpBig h-[40vh] bottom-2"
                     : !animateIn2 && !animateOut
                     ? "-bottom-[100%]"
                     : !animateIn2 && animateOut
@@ -452,7 +471,7 @@ const Index: NextPage = () => {
                 }  w-[100%] } `}
               >
                 <div className="px-10 pt-10 pb-40 text-center text-black">
-                  <div className="flex justify-evenly absolute md:-top-[10%] -top-[20%] w-[100%] left-0">
+                  <div className="flex justify-evenly absolute -top-[15%] w-[100%] left-0">
                     <div
                       className={`bg-red-opacity cursor-pointer aspect-square rounded-lg transition-half ${
                         bgColor === "red" && "border-white border-4 shadow-xl"
@@ -608,7 +627,7 @@ const Index: NextPage = () => {
                 width={200}
                 height={200}
                 alt="LOVE"
-                className={`absolute bottom-10 z-0 right-2 ${
+                className={`absolute bottom-14 z-0 right-2 ${
                   animateIn2 && !animateOut
                     ? "animate__animated animate__slow animate__fadeInUpBig"
                     : !animateIn2 && !animateOut
@@ -620,7 +639,7 @@ const Index: NextPage = () => {
               />
 
               <button
-                className={`text-center text-white m-5 p-5 bg-${bgColor} w-[80%] py-4 rounded-md transition-1 absolute bottom-0 ${
+                className={`text-center text-white m-5 p-5 bg-${bgColor} w-[80%] py-4 rounded-md transition-1 absolute bottom-3 ${
                   animateIn2 && !animateOut
                     ? "animate__animated animate__slow animate__fadeInUpBig"
                     : !animateIn2 && !animateOut
