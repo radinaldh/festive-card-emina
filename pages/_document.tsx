@@ -5,7 +5,6 @@ class EminaDoc extends Document {
     return (
       <Html lang="en">
         <Head>
-          <title>Festive Microsite</title>
           <meta name="description" content="Emina Festive Microsite" />
         </Head>
         <body>

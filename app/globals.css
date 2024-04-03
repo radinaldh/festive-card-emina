@@ -234,6 +234,28 @@ h6 {
   border: 2px solid #efd799;
 }
 
+.border-color-red {
+  --tw-text-opacity: 1;
+  border-color: rgb(237 91 91);
+  border-style: solid;
+}
+
+.border-color-blue {
+  --tw-text-opacity: 1;
+  border-color: #8cb9ea;
+  border-style: solid;
+}
+
+.border-color-yellow {
+  --tw-text-opacity: 1;
+  border-color: #efd799;
+  border-style: solid;
+}
+
+.text-shadow {
+  text-shadow: 2px 2px #000;
+}
+
 .input-icon {
   position: relative;
   display: inline-block;

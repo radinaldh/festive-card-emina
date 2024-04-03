@@ -1,10 +1,12 @@
 import { db } from "@/app/utils/firebase/firebaseConfig";
 import Ellipse from "@/components/Ellipse";
 import EllipseRevert from "@/components/EllipseRevert";
+import Logo from "@/components/Logo";
 import lottieLetter from "@/public/letter.json";
 import "animate.css";
 import { doc, getDoc } from "firebase/firestore";
 import { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -34,6 +36,8 @@ const CardPage: NextPage<IProps> = ({ data }) => {
       await wait(2000);
       setSteps(1);
       setAnimateIn(true);
+      await wait(2000);
+      setAnimateIn(false);
     };
     runAnimations();
   }, []);
@@ -53,178 +57,193 @@ const CardPage: NextPage<IProps> = ({ data }) => {
   }`;
 
   return (
-    <div
-      className={`relative z-10 flex flex-col min-h-screen justify-center items-center w-[100%] overflow-x-hidden animate__animated transition-1 animate__slow bg-${data?.color}-opacity`}
-    >
-      <Ellipse
-        className="absolute top-0 right-0 transition-1 z-0"
-        color={
-          data?.color === "red"
-            ? "#D97279"
-            : data?.color === "yellow"
-            ? "#F4DEA7"
-            : "#9F85BB"
-        }
-      />
-      <EllipseRevert
-        className="absolute bottom-0 left-0 transition-1 z-0"
-        color={
-          data?.color === "red"
-            ? "#D97279"
-            : data?.color === "yellow"
-            ? "#F4DEA7"
-            : "#9F85BB"
-        }
-      />
-      {steps === 0 && (
-        <Lottie
-          animationData={lottieLetter}
-          style={{ width: "100%", height: "100%" }}
-          className={`absolute top-0 left-0 bottom-0 right-0 z-10`}
-          play
-          loop
+    <>
+      <Head>
+        <title>
+          Emina Festive Microsite - From {data?.sender} to {data?.recipient}
+        </title>
+      </Head>
+      <div
+        className={`relative z-10 flex flex-col min-h-screen justify-center items-center w-[100%] overflow-x-hidden animate__animated transition-1 animate__slow bg-${data?.color}-opacity`}
+      >
+        <Ellipse
+          className="absolute top-0 right-0 transition-1 z-0"
+          color={
+            data?.color === "red"
+              ? "#D97279"
+              : data?.color === "yellow"
+              ? "#F4DEA7"
+              : "#9F85BB"
+          }
         />
-      )}
-      {steps === 1 && (
-        <div
-          className={`flex flex-col justify-center items-center w-[100%] h-[100%] p-5 relative z-10`}
-        >
-          <div className="px-5 relative text-center">
-            {data?.image_url && (
-              <img
-                src={data?.image_url}
-                alt="Card Image"
-                className={`w-[90%] aspect-square object-cover rounded-md m-auto border-2 border-${
-                  data?.color === "red"
-                    ? "red"
-                    : data?.color === "yellow"
-                    ? "yellow"
-                    : "blue"
-                } ${animateIn && "animate__animated animate__zoomIn"}`}
-              />
-            )}
-            <Image
-              src={`/chatbubble.png`}
-              alt="Card Image"
-              width={100}
-              height={100}
-              className="absolute left-0 bottom-0 animate__animated animate__pulse animate__infinite animate__slow"
-            />
-          </div>
-
+        <EllipseRevert
+          className="absolute bottom-0 left-0 transition-1 z-0"
+          color={
+            data?.color === "red"
+              ? "#D97279"
+              : data?.color === "yellow"
+              ? "#F4DEA7"
+              : "#9F85BB"
+          }
+        />
+        {steps === 0 && (
+          <Lottie
+            animationData={lottieLetter}
+            style={{ width: "100%", height: "100%" }}
+            className={`absolute top-0 left-0 bottom-0 right-0 z-10`}
+            play
+            loop
+          />
+        )}
+        {steps === 1 && (
           <div
-            className={`bg-white w-[100%] mt-5 px-3 py-2 rounded-md border-2 border-${
-              data?.color === "red"
-                ? "red"
-                : data?.color === "yellow"
-                ? "yellow"
-                : "blue"
-            } ${
-              animateIn && "animate__animated animate__zoomIn animate__delay-2s"
-            }`}
+            className={`flex flex-col justify-center items-center w-[100%] h-[100%] p-5 relative z-10`}
           >
-            <h4 className={`${textColor}`}>
-              Dear <b>{data?.recipient}</b>
-            </h4>
-            <h4 className={`${textColor}`}>
-              Its’ connection card from <b>{data?.sender}</b>
-            </h4>
-            <svg
-              width="333"
-              height="2"
-              viewBox="0 0 333 2"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <line
-                y1="0.612793"
-                x2="333"
-                y2="0.612793"
-                stroke="url(#paint0_linear_180_1481)"
+            <Logo
+              width={100}
+              height={50}
+              color={
+                data?.color === "red"
+                  ? "#F78B93"
+                  : data?.color === "yellow"
+                  ? "#F4DEA7"
+                  : "#8CB9EA"
+              }
+              className={`mb-5 transition-1`}
+            />
+            <div className="px-5 relative text-center">
+              {data?.image_url && (
+                <img
+                  src={data?.image_url}
+                  alt="Card Image"
+                  className={`w-[90%] aspect-square object-cover rounded-md m-auto border-2 border-${
+                    data?.color === "red"
+                      ? "red"
+                      : data?.color === "yellow"
+                      ? "yellow"
+                      : "blue"
+                  } ${animateIn && "animate__animated animate__zoomIn"}`}
+                />
+              )}
+              <Image
+                src={`/chatbubble.png`}
+                alt="Card Image"
+                width={100}
+                height={100}
+                className="absolute left-0 bottom-0 animate__animated animate__pulse animate__infinite animate__slow"
               />
-              <defs>
-                <linearGradient
-                  id="paint0_linear_180_1481"
-                  x1="-21"
-                  y1="1.11279"
-                  x2="346"
-                  y2="1.11298"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stopColor="#F78B93" stopOpacity="0" />
-                  <stop offset="0.5" stopColor="#F78B93" />
-                  <stop offset="1" stopColor="#F78B93" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <p className={`${textColor} py-5`}>Message: {data?.message}</p>
-          </div>
-          <div className={`flex gap-2 justify-center items-stretch`}>
-            <img
-              alt="HeartLeft"
-              width={50}
-              src="/heart-left.png"
-              className={`aspect-square object-contain ${
-                animateIn &&
-                "animate__animated animate__bounceInLeft animate__delay-3s"
-              }`}
-            />
+            </div>
 
-            <a
-              href="https://www.instagram.com/reel/C4u3fhtp0ik/?igsh=MW1sZ282aGowcTdnYw=="
-              className={`text-center mt-5 border-4 border-${
+            <div
+              className={`bg-white w-[100%] mt-5 px-3 py-2 rounded-md border-2 border-${
+                data?.color === "red"
+                  ? "red"
+                  : data?.color === "yellow"
+                  ? "yellow"
+                  : "blue"
+              } ${
+                animateIn &&
+                "animate__animated animate__zoomIn animate__delay-2s"
+              }`}
+            >
+              <h4 className={`${textColor}`}>
+                Dear <b>{data?.recipient}</b>
+              </h4>
+              <h4 className={`${textColor}`}>
+                Its’ connection card from <b>{data?.sender}</b>
+              </h4>
+              <svg
+                width="333"
+                height="2"
+                viewBox="0 0 333 2"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  y1="0.612793"
+                  x2="333"
+                  y2="0.612793"
+                  stroke="url(#paint0_linear_180_1481)"
+                />
+                <defs>
+                  <linearGradient
+                    id="paint0_linear_180_1481"
+                    x1="-21"
+                    y1="1.11279"
+                    x2="346"
+                    y2="1.11298"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stopColor="#F78B93" stopOpacity="0" />
+                    <stop offset="0.5" stopColor="#F78B93" />
+                    <stop offset="1" stopColor="#F78B93" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <p className={`${textColor} py-5`}>Message: {data?.message}</p>
+            </div>
+            <div className={`flex gap-4 justify-center items-stretch`}>
+              <img
+                alt="HeartLeft"
+                width={50}
+                src="/heart-left.png"
+                className={`aspect-square object-contain ${
+                  animateIn &&
+                  "animate__animated animate__bounceInLeft animate__delay-3s"
+                }`}
+              />
+
+              <a
+                href="https://www.instagram.com/reel/C4u3fhtp0ik/?igsh=MW1sZ282aGowcTdnYw=="
+                className={`bg-[#85E7E6] text-center mt-5 text-white text-shadow shadow-md w-[100%] py-4 px-5 rounded-md transition-1 animate__animated ${
+                  animateIn
+                    ? "animate__bounceInLeft animate__delay-3s"
+                    : "animate__tada animate__infinite animate__slow"
+                }`}
+                target="_blank"
+              >
+                <strong>
+                  Makeup <br /> inspo
+                </strong>
+              </a>
+              <a
+                href="https://www.instagram.com/reel/C4xCDdbJTtN/?igsh=OWcwcmdrdWt4ZGFt"
+                className={`bg-[#FCBDCB] text-center mt-5 text-white text-shadow shadow-md w-[100%] py-4 px-5 rounded-md transition-1 animate__animated ${
+                  animateIn
+                    ? "animate__bounceInLeft animate__delay-3s"
+                    : "animate__tada animate__infinite animate__slow"
+                }`}
+                target="_blank"
+              >
+                <strong>
+                  OOTD <br /> inspo
+                </strong>
+              </a>
+              <img
+                alt="HeartRight"
+                width={50}
+                src="/heart-right.png"
+                className={`aspect-square object-contain ${
+                  animateIn &&
+                  "animate__animated animate__bounceInRight animate__delay-3s"
+                }`}
+              />
+            </div>
+            <button
+              className={`text-center text-white mt-5 bg-${
                 data?.color
-              } text-${
-                data?.color
-              }-400 w-[100%] py-4 px-5 rounded-md transition-1 ${
+              } w-[100%] py-4 rounded-md transition-1 ${
                 animateIn &&
                 "animate__animated animate__zoomIn animate__delay-3s"
               }`}
-              target="_blank"
+              onClick={() => router.push("/")}
             >
-              <strong>
-                Makeup <br /> inspo
-              </strong>
-            </a>
-            <a
-              href="https://www.instagram.com/reel/C4xCDdbJTtN/?igsh=OWcwcmdrdWt4ZGFt"
-              className={`text-center mt-5 border-4 border-${
-                data?.color
-              } text-${
-                data?.color
-              }-400 w-[100%] py-4 px-5 rounded-md transition-1 ${
-                animateIn &&
-                "animate__animated animate__zoomIn animate__delay-3s"
-              }`}
-              target="_blank"
-            >
-              <strong>
-                OOTD <br /> inspo
-              </strong>
-            </a>
-            <img
-              alt="HeartRight"
-              width={50}
-              src="/heart-right.png"
-              className={`aspect-square object-contain ${
-                animateIn &&
-                "animate__animated animate__bounceInRight animate__delay-3s"
-              }`}
-            />
+              Create Your Own Card
+            </button>
           </div>
-          <button
-            className={`text-center text-white mt-5 bg-${
-              data?.color
-            } w-[100%] py-4 rounded-md transition-1 ${
-              animateIn && "animate__animated animate__zoomIn animate__delay-3s"
-            }`}
-            onClick={() => router.push("/")}
-          >
-            Create Your Own Card
-          </button>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 

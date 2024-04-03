@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useRef, useState, useEffect, FC, useCallback } from "react";
 
 interface PhotoUploadProps {
@@ -6,6 +7,7 @@ interface PhotoUploadProps {
   placeholderImg: string;
   color: string;
   className?: string;
+  sender: string;
 }
 
 const PhotoUpload: FC<PhotoUploadProps> = ({
@@ -14,6 +16,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
   placeholderImg,
   color,
   className,
+  sender,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -52,9 +55,15 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
         );
         canvasRef.current.toBlob((blob) => {
           if (blob) {
-            const file = new File([blob], "user_photo.png", {
-              type: "image/png",
-            });
+            const file = new File(
+              [blob],
+              `${sender}_photo_${moment().format("MMMM-dd-YY")}_${Math.floor(
+                Math.random() * 100
+              )}.png`,
+              {
+                type: "image/png",
+              }
+            );
             setPhotoTaken(true);
             onImageSelect(file);
           }
@@ -134,11 +143,20 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
   const handleFileInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
+    const originalFile = event.target.files?.[0];
+    if (originalFile) {
+      const newFileName = `uploaded_${sender}_photo_${moment().format(
+        "YYYY-MM-DD"
+      )}_${Math.floor(Math.random() * 1000)}.${originalFile.name
+        .split(".")
+        .pop()}`;
 
-      // Revoke the previous object URL to avoid memory leaks
+      const fileWithNewName = new File([originalFile], newFileName, {
+        type: originalFile.type,
+      });
+
+      const imageUrl = URL.createObjectURL(fileWithNewName);
+
       if (canvasRef.current) {
         const ctx = canvasRef.current.getContext("2d");
         if (ctx) {
@@ -152,7 +170,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
       }
 
       drawImageToCanvas(imageUrl);
-      onImageSelect(file);
+      onImageSelect(fileWithNewName);
       setPhotoTaken(true);
     }
   };

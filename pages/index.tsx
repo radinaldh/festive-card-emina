@@ -14,6 +14,7 @@ import QRCode from "qrcode.react";
 import React, { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import LoadingHearts from "../components/LoadingHearts";
+import Head from "next/head";
 
 interface IPayload {
   sender: string;
@@ -227,6 +228,9 @@ const Index: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Emina Festive Microsite - Create Your Connection Card</title>
+      </Head>
       {steps === 0 && (
         <div
           className={`flex max-h-screen flex-col justify-center h-[100vh] items-center w-[100%] line-vector overflow-hidden animate__animated ${
@@ -736,7 +740,7 @@ const Index: NextPage = () => {
                     alt={"hearts"}
                     width={75}
                     height={75}
-                    src={`/hearts-2.png`}
+                    src={`/heart-left.png`}
                     className="absolute inline left-10 animate__animated animate__heartBeat animate__infinite animate__slower"
                   />
                   <Logo
@@ -755,7 +759,7 @@ const Index: NextPage = () => {
                     alt={"hearts"}
                     width={75}
                     height={75}
-                    src={`/hearts.png`}
+                    src={`/heart-right.png`}
                     className="absolute inline right-10 animate__animated animate__heartBeat animate__infinite animate__slower animate__delay-2s"
                   />
                 </div>
@@ -879,6 +883,7 @@ const Index: NextPage = () => {
                 placeholderImg="/placeholder.png"
                 color={bgColor}
                 handleSubmit={handleSubmit}
+                sender={payload.sender}
               />
             </div>
           )}
@@ -912,7 +917,33 @@ const Index: NextPage = () => {
                 </button>
               </div>
               <div className="flex flex-col items-center h-[100%] justify-center relative z-10 gap-3 w-[100%]">
-                <div className="p-3 bg-white rounded-xl HpQrcode">
+                <Logo
+                  width={150}
+                  height={75}
+                  color={
+                    bgColor === "red"
+                      ? "#F78B93"
+                      : bgColor === "yellow"
+                      ? "#F4DEA7"
+                      : "#8CB9EA"
+                  }
+                  className={`mb-5 transition-1`}
+                />
+                <Image
+                  alt={"hearts"}
+                  width={75}
+                  height={75}
+                  src={`/heart-left.png`}
+                  className="absolute inline left-5 animate__animated animate__heartBeat animate__infinite animate__slower top-5"
+                />
+                <Image
+                  alt={"hearts"}
+                  width={75}
+                  height={75}
+                  src={`/heart-right.png`}
+                  className="absolute inline right-5 animate__animated animate__heartBeat animate__infinite animate__slower animate__delay-2s top-5"
+                />
+                <div className="p-3 bg-white rounded-xl HpQrcode relative z-10">
                   <QRCode value={qrCodeUrl} size={200} className="" />
                 </div>
                 <div className="text-center px-4">
@@ -969,25 +1000,25 @@ const Index: NextPage = () => {
                     </h3>
                   </div>
                   <button
-                    className={`bg-white w-[100%] py-3 px-4 rounded-md text-${
+                    className={`text-white w-[100%] py-3 px-4 rounded-md bg-${
                       bgColor === "red"
-                        ? "red-400"
+                        ? "red"
                         : bgColor === "yellow"
-                        ? "yellow-400"
-                        : "blue-400"
+                        ? "yellow"
+                        : "blue"
                     }`}
                     type="button"
                     onClick={copyToClipboard}
                   >
-                    Copy Link
+                    {successMessage && (
+                      <p className="success-message">{successMessage}</p>
+                    )}
+                    {errorMessage && (
+                      <p className="error-message">{errorMessage}</p>
+                    )}
+                    {!successMessage && !errorMessage && <>Copy Link</>}
                   </button>
                 </div>
-                {successMessage && (
-                  <p className="success-message">{successMessage}</p>
-                )}
-                {errorMessage && (
-                  <p className="error-message">{errorMessage}</p>
-                )}
               </div>
             </>
           )}
