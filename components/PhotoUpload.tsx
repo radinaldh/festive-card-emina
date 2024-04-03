@@ -45,31 +45,37 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
   const takePhoto = () => {
     if (canvasRef.current && videoRef.current && isVideoReady) {
       const ctx = canvasRef.current.getContext("2d");
-      const video = videoRef.current;
-      if (ctx && video) {
-        // Adjust canvas size to match the video's intrinsic dimensions
-        canvasRef.current.width = video.videoWidth;
-        canvasRef.current.height = video.videoHeight;
+      if (ctx) {
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
         // Save the current state of the context
         ctx.save();
 
-        // Mirror the image by scaling and translating the context
-        ctx.scale(-1, 1);
-        ctx.translate(-video.videoWidth, 0);
+        // Mirror the image
+        ctx.scale(-1, 1); // Flip the canvas context horizontally
+        ctx.translate(-canvasRef.current.width, 0); // Move the canvas context back into the correct position
 
         // Draw the mirrored video frame onto the canvas
-        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        ctx.drawImage(
+          videoRef.current,
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
 
         // Restore the canvas context to its original state
         ctx.restore();
 
-        // Create a blob from the canvas
+        // Proceed with creating a blob and a File from the canvas
         canvasRef.current.toBlob((blob) => {
           if (blob) {
             const file = new File(
               [blob],
-              `${sender}_photo_${moment().format("YYYY-MM-DD_HH-mm-ss")}.png`,
+              `${sender}_photo_${moment().format("MMMM-DD-YY")}_${Math.floor(
+                Math.random() * 100
+              )}.png`,
               {
                 type: "image/png",
               }
@@ -80,7 +86,7 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
         }, "image/png");
 
         // Pause the video and indicate that the video is no longer ready for another snapshot
-        video.pause();
+        videoRef.current.pause();
         setIsVideoReady(false);
       }
     }
@@ -266,7 +272,9 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
       />
       <canvas
         ref={canvasRef}
-        className="rounded-lg mx-auto object-contain w-[100%] h-[250px] aspect-square"
+        width="250"
+        height="250"
+        className="rounded-lg mx-auto"
       />
       {!photoTaken ? (
         <>
