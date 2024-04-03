@@ -169,11 +169,10 @@ const Index: NextPage = () => {
       return;
     }
 
-    const padding = 20; // amount of padding for white space
-    const textHeight = 30; // estimated height for the text
-    const captionText = "Emina Connection Card"; // your caption
+    const padding = 20;
+    const textHeight = 30;
+    const captionText = "Emina Connection Card";
 
-    // Create new canvas with extra space for padding and text
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     canvas.width = originalCanvas.width + padding * 2;
@@ -194,7 +193,7 @@ const Index: NextPage = () => {
     // Add caption text
     ctx.fillStyle = "#000000"; // text color
     ctx.textAlign = "center";
-    ctx.font = "12px Arial"; // modify as needed
+    ctx.font = "16px Arial"; // modify as needed
     ctx.fillText(
       captionText,
       canvas.width / 2,
@@ -208,7 +207,9 @@ const Index: NextPage = () => {
         return;
       }
 
-      const fileName = `qr-code.png`;
+      const fileName = `from-${payload?.sender}-qr-code-${moment().format(
+        "YYYY-MM-DD"
+      )}.png`;
       const file = new File([blob], fileName, { type: "image/png" });
 
       try {
