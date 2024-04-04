@@ -37,17 +37,20 @@ const sampleItems = [
   {
     image: "happy.png", // Random animal image
     title: "Happy",
-    message: "Just a random happy animal.",
+    message:
+      "Halo bestie! Selamat Lebaran! 🌙🎉 Lebaran kali ini, mari kita tetap stay connected, sharing cerita, dan bertukar doa. Eid Mubarak, bestie!  ",
   },
   {
     image: "funny.png", // Random nature image
     title: "Joyful",
-    message: "Nature is always a joy to look at.",
+    message:
+      "Eid Mubarak, bestie! 🌟Walau kita beda timezone, Cheers to more virtual hangouts and endless laughter! Selamat lebaran bestie 🌙🎉",
   },
   {
     image: "warm.png", // Random architecture image
     title: "Inspiring",
-    message: "Architecture can inspire us in many ways.",
+    message:
+      "Hey bestie! 🎉 Eid Mubarak! May this Eid bring you lots of happiness and blessings with every step you take. 🌟",
   },
 ];
 
@@ -921,8 +924,9 @@ const Index: NextPage = () => {
                         </div>
 
                         <h6>{item.title}</h6>
-                        <p className="text-[10px] lg:text-[12px]">
-                          {item.message}
+                        <p className="text-[10px] lg:text-[12px] px-2">
+                          {item.message.substring(0, 30)}
+                          {`...`}
                         </p>
                       </div>
                     ))}
