@@ -7,15 +7,23 @@ import Logo from "@/components/Logo";
 import PhotoUpload from "@/components/PhotoUpload";
 import lottieChar from "@/public/character_intro.json";
 import lottieProducts from "@/public/products.json";
-import "animate.css";
+import moment from "moment";
 import { NextPage } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import QRCode from "qrcode.react";
 import React, { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
+import { Navigation, Pagination } from "swiper/modules";
 import LoadingHearts from "../components/LoadingHearts";
-import Head from "next/head";
-import moment from "moment";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "animate.css";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 interface IPayload {
   sender: string;
@@ -882,11 +890,11 @@ const Index: NextPage = () => {
                   Write Your Message
                 </h5>
                 <div className="bg-white rounded-xl p-3 flex items-center justify-center">
-                  <label className="w-[100%]">
+                  <label className="w-[100%] flex justify-center items-center">
                     <textarea
                       value={payload.message}
                       placeholder="Write your message..."
-                      rows={3}
+                      rows={4}
                       className={`message-control transition-1 border-${
                         bgColor === "red"
                           ? "red"
@@ -904,7 +912,7 @@ const Index: NextPage = () => {
                   </label>
                 </div>
                 <div className="relative">
-                  <div className="flex justify-center items-stretch gap-3 w-[100%] my-4">
+                  {/* <div className="flex justify-center items-stretch gap-3 w-[100%] my-4">
                     {sampleItems.map((item: any, index: number) => (
                       <div
                         className={`rounded-2xl text-center py-5 transition-1 ${
@@ -925,12 +933,48 @@ const Index: NextPage = () => {
 
                         <h6>{item.title}</h6>
                         <p className="text-[10px] lg:text-[12px] px-2">
-                          {item.message.substring(0, 30)}
-                          {`...`}
+                          {item.message}
                         </p>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
+                  <Swiper
+                    modules={[Navigation, Pagination]}
+                    navigation
+                    spaceBetween={50}
+                    slidesPerView={1}
+                    pagination={{ clickable: true, dynamicBullets: true }}
+                    className="mt-5"
+                  >
+                    {sampleItems.map((item: any, index: number) => (
+                      <SwiperSlide className="p-1">
+                        <div
+                          className={`rounded-2xl text-center py-5 transition-1 ${
+                            activeIndex === index
+                              ? "shadow-md border-2"
+                              : "shadow-sm border-0"
+                          } text-black bg-gradient w-[100%] shadow-md cursor-pointer`}
+                          key={index}
+                          onClick={() => handleMessage(index, item)}
+                        >
+                          <div className={`p-2 mx-2`}>
+                            <Image
+                              alt={item.title}
+                              width={25}
+                              height={25}
+                              src={`/${item.image}`}
+                              className="inline"
+                            />
+                          </div>
+
+                          <h6>{item.title}</h6>
+                          <p className="text-[10px] lg:text-[12px] px-2">
+                            {item.message}
+                          </p>
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
 
                   <Image
                     src={"/love.png"}
