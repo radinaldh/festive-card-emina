@@ -947,7 +947,7 @@ const Index: NextPage = () => {
                     className="mt-5"
                   >
                     {sampleItems.map((item: any, index: number) => (
-                      <SwiperSlide className="p-1">
+                      <SwiperSlide className="p-1" key={index}>
                         <div
                           className={`rounded-2xl text-center py-5 transition-1 ${
                             activeIndex === index
