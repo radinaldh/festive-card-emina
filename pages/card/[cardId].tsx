@@ -126,7 +126,7 @@ const CardPage: NextPage<IProps> = ({ data }) => {
                 />
               )}
               <Image
-                src={`/chatbubble.png`}
+                src={`/love.png`}
                 alt="Card Image"
                 width={100}
                 height={100}
@@ -147,10 +147,11 @@ const CardPage: NextPage<IProps> = ({ data }) => {
               }`}
             >
               <h4 className={`${textColor}`}>
-                Dear <b>{data?.recipient}</b>
+                Dear <b className="capitalize">{data?.recipient}</b>,
               </h4>
               <h4 className={`${textColor}`}>
-                Its’ connection card from <b>{data?.sender}</b>
+                <b className="capitalize">{data?.sender}</b> send you a
+                connection card
               </h4>
               <svg
                 width="333"
@@ -180,7 +181,7 @@ const CardPage: NextPage<IProps> = ({ data }) => {
                   </linearGradient>
                 </defs>
               </svg>
-              <p className={`${textColor} py-5`}>Message: {data?.message}</p>
+              <p className={`${textColor} py-5`}>{data?.message}</p>
             </div>
             <div className={`flex gap-4 justify-center items-stretch`}>
               <img

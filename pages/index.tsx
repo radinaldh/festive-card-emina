@@ -141,7 +141,7 @@ const Index: NextPage = () => {
         // Here we're sharing the URL encoded in the QR code
         await navigator.share({
           title: "Check out this card",
-          text: "I wanted to share this card with you:",
+          text: "Hallo Bestie, its connection card for you 😊 ",
           url: qrCodeUrl, // This is the URL you're encoding in your QR code
         });
         console.log("Card shared successfully");
@@ -676,42 +676,51 @@ const Index: NextPage = () => {
             </>
           )}
           {steps === 3 && (
-            <div
-              className={`animate__animated animate__slow relative w-[100%] ${
-                char === 0 ? "animate__fadeIn" : char > 6 && "animate__fadeOut"
-              } `}
-              onClick={() => setChar((i: any) => i + 1)}
-            >
-              <img src="/snakeBg.png" className="w-[100%]" alt="emina" />
-              <img
-                src="/char.png"
-                className={`absolute w-[30%] transition-1 ${
+            <>
+              <div
+                className={`animate__animated animate__slow relative w-[100%] h-screen ${
                   char === 0
-                    ? "bottom-[7%] left-2"
-                    : char === 1
-                    ? "bottom-[7%] left-[65%]"
-                    : char === 2
-                    ? "bottom-[26%] left-[65%]"
-                    : char === 3
-                    ? "bottom-[26%] left-2"
-                    : char === 4
-                    ? "bottom-[49%] left-2"
-                    : char === 5
-                    ? "bottom-[49%] left-[65%]"
-                    : char === 6
-                    ? "bottom-[74%] left-[65%]"
-                    : "bottom-[74%] left-2"
-                }`}
-                alt="emina char"
-              />
+                    ? "animate__fadeIn"
+                    : char > 6 && "animate__fadeOut"
+                } `}
+                onClick={() => setChar((i: any) => i + 1)}
+              >
+                <img
+                  src="/snakeBg.png"
+                  className="w-[100%] h-[100%] object-contain"
+                  alt="emina"
+                />
+                <img
+                  src="/char.png"
+                  className={`absolute w-[30%] transition-1 ${
+                    char === 0
+                      ? "bottom-[6%] left-2"
+                      : char === 1
+                      ? "bottom-[6%] left-[65%]"
+                      : char === 2
+                      ? "bottom-[27%] left-[65%]"
+                      : char === 3
+                      ? "bottom-[27%] left-2"
+                      : char === 4
+                      ? "bottom-[49%] left-2"
+                      : char === 5
+                      ? "bottom-[49%] left-[65%]"
+                      : char === 6
+                      ? "bottom-[72%] left-[65%]"
+                      : "bottom-[72%] left-2"
+                  }`}
+                  alt="emina char"
+                />
+              </div>
               <div className="absolute bottom-3 w-[100%] px-5">
                 <button
                   className={`text-center text-white p-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1 animate__animated animate__pulse animate__infinite`}
+                  onClick={() => setChar((i: any) => i + 1)}
                 >
                   <strong>Tap the screen!</strong>
                 </button>
               </div>
-            </div>
+            </>
           )}
           {steps === 4 && (
             <div
@@ -740,6 +749,12 @@ const Index: NextPage = () => {
                     : bgColor === "yellow"
                     ? "yellow-500"
                     : "blue-500"
+                } text-shadow-${
+                  bgColor === "red"
+                    ? "red"
+                    : bgColor === "yellow"
+                    ? "yellow"
+                    : "blue"
                 }`}
               >
                 <b>Bestie mau bonding sama siapa nih?</b>
@@ -1040,13 +1055,26 @@ const Index: NextPage = () => {
             </div>
           )}
           {steps === 7 && (
-            <Lottie
-              loop
-              animationData={lottieProducts}
-              play
-              style={{ width: "100%", height: "100%" }}
-              className={`absolute top-0 left-0 right-0 bottom-0`}
-            />
+            <div className="h-screen relative flex justify-center items-center overflow-hidden">
+              <h2
+                className={`z-10 px-2 text-center animate__animated animate__pulse animate_slow animate__infinite text-shadow-${
+                  bgColor === "red"
+                    ? "red"
+                    : bgColor === "yellow"
+                    ? "yellow"
+                    : "blue"
+                }`}
+              >
+                <strong> Your Connection Card is still being processed</strong>
+              </h2>
+              <Lottie
+                loop
+                animationData={lottieProducts}
+                play
+                style={{ width: "100%", height: "100%" }}
+                className={`absolute top-0 left-0 right-0 bottom-0`}
+              />
+            </div>
           )}
           {steps === 8 && (
             <>
@@ -1086,18 +1114,25 @@ const Index: NextPage = () => {
                   width={75}
                   height={75}
                   src={`/heart-left.png`}
-                  className="absolute inline left-5 animate__animated animate__heartBeat animate__infinite animate__slower top-5"
+                  className="absolute inline left-5 animate__animated animate__heartBeat animate__infinite animate__slower animate__delay-2s top-5"
                 />
                 <Image
                   alt={"hearts"}
                   width={75}
                   height={75}
                   src={`/heart-right.png`}
-                  className="absolute inline right-5 animate__animated animate__heartBeat animate__infinite animate__slower animate__delay-2s top-5"
+                  className="absolute inline right-5 animate__animated animate__heartBeat animate__infinite animate__slower animate__delay-3s top-5"
                 />
-                <div className="p-3 bg-white rounded-xl HpQrcode relative z-10">
-                  <QRCode value={qrCodeUrl} size={200} className="" />
+                <div className="p-3 bg-white rounded-xl HpQrcode relative z-10 hidden">
+                  <QRCode value={qrCodeUrl} size={200} className="hidden" />
                 </div>
+                <Image
+                  src={"/love_letter.png"}
+                  height={150}
+                  width={150}
+                  alt="Emina Letter"
+                  className="animate__animated animate__swing animate__infinite animate__slower"
+                />
                 <div className="text-center px-4">
                   <h4
                     className={`text-${

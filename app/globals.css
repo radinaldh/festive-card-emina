@@ -10,7 +10,7 @@
   --blue: #8cb9ea;
   --yellow: #f4dea7;
   --red-opacity: #ffeced;
-  --blue-opacity: #e6edf5;
+  --blue-opacity: #aedaf3;
   --yellow-opacity: #fcf9f1;
 }
 
@@ -165,8 +165,9 @@ h6 {
   background-color: #fff;
   border-radius: 25px;
   position: relative;
-  font-size: 8px;
+  font-size: 10px;
   width: fit-content;
+  color: #8cb9ea;
 }
 
 .text-bubble:after {
@@ -215,6 +216,21 @@ h6 {
   color: #c7ae71;
 }
 
+.text-shadow-red {
+  text-shadow: 2px 1px #c7ae71;
+  font-size: 30px;
+}
+
+.text-shadow-blue {
+  text-shadow: 2px 1px #dd7392;
+  font-size: 30px;
+}
+
+.text-shadow-yellow {
+  text-shadow: 2px 1px #7da9d8;
+  font-size: 30px;
+}
+
 .border-red {
   --tw-text-opacity: 1;
   border: 2px solid rgb(237 91 91);
@@ -249,7 +265,7 @@ h6 {
 }
 
 .text-shadow {
-  text-shadow: 2px 2px #000;
+  text-shadow: 2px 2px rgb(0, 173, 147);
 }
 
 .input-icon {

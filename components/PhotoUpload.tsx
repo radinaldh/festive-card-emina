@@ -256,30 +256,31 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
 
   return (
     <div className={`relative z-10 h-[100%] py-5 mt-5 ${className}`}>
-      <img
-        alt="HeartLeft"
-        width={50}
-        height={50}
-        src="/heart-left.png"
-        className="absolute left-5 top-0"
-      />
-      <img
-        alt="HeartRight"
-        width={50}
-        height={50}
-        src="/heart-right.png"
-        className="absolute right-5 top-0"
-      />
-      <canvas
-        ref={canvasRef}
-        width="250"
-        height="250"
-        className="rounded-lg mx-auto"
-      />
+      <div className="relative">
+        <img
+          alt="HeartLeft"
+          width={50}
+          height={50}
+          src="/heart-left.png"
+          className="absolute left-5 top-0"
+        />
+        <img
+          alt="HeartRight"
+          width={50}
+          height={50}
+          src="/heart-right.png"
+          className="absolute right-5 bottom-0"
+        />
+        <canvas
+          ref={canvasRef}
+          width="250"
+          height="250"
+          className="rounded-lg mx-auto"
+        />
+      </div>
       {!photoTaken ? (
         <>
-          <div className="w-[100%] justify-between items-end my-4 flex animate__animated animate__fadeIn">
-            <img alt="HeartLeft" width={50} height={50} src="/heart-left.png" />
+          <div className="w-[100%] text-center my-4 animate__animated animate__fadeIn">
             <h3
               className={`animate__animated animate__fadeIn text-center text-${
                 color === "red"
@@ -291,12 +292,6 @@ const PhotoUpload: FC<PhotoUploadProps> = ({
             >
               <b>Take Your Photo</b>
             </h3>
-            <img
-              alt="HeartLeft"
-              width={50}
-              height={50}
-              src="/heart-right.png"
-            />
           </div>
           <p
             className={`animate__animated animate__fadeIn text-center text-${
