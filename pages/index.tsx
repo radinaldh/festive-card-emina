@@ -1207,7 +1207,7 @@ const Index: NextPage = () => {
                 </svg>
                 <p className={`${textColor} py-5`}>{payload?.message}</p>
               </div>
-              <div className={`flex gap-4 justify-center items-stretch`}>
+              {/* <div className={`flex gap-4 justify-center items-stretch`}>
                 <img
                   alt="HeartLeft"
                   width={50}
@@ -1245,9 +1245,9 @@ const Index: NextPage = () => {
                     "animate__animated animate__bounceInRight animate__delay-3s"
                   }`}
                 />
-              </div>
+              </div> */}
               <button
-                className={`text-center text-white mt-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1 ${
+                className={`text-center text-white mt-3 bg-${bgColor} w-[100%] py-4 rounded-md transition-1 ${
                   animateIn &&
                   "animate__animated animate__zoomIn animate__delay-3s"
                 }`}
