@@ -1,14 +1,14 @@
 "use client";
 
 import { saveCardData, uploadImageAndGetURL } from "@/app/services/cardService";
-import Ellipse from "@/components/Ellipse";
-import EllipseRevert from "@/components/EllipseRevert";
+import { db } from "@/app/utils/firebase/firebaseConfig";
 import Logo from "@/components/Logo";
 import PhotoUpload from "@/components/PhotoUpload";
 import lottieChar from "@/public/character_intro.json";
 import lottieProducts from "@/public/products.json";
+import { doc, getDoc } from "firebase/firestore";
 import moment from "moment";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import QRCode from "qrcode.react";
@@ -16,7 +16,6 @@ import React, { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import { Navigation, Pagination } from "swiper/modules";
 import LoadingHearts from "../components/LoadingHearts";
-
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "animate.css";
@@ -76,6 +75,7 @@ const Index: NextPage = () => {
   const [bgColor, setBgColor] = useState<string>("red");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [payload, setPayload] = useState<IPayload>(initialPayload);
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
   const [uploadError, setUploadError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -109,6 +109,7 @@ const Index: NextPage = () => {
       setSteps(7);
       if (payload.image_url instanceof File) {
         imageUrl = await uploadImageAndGetURL(payload.image_url);
+        setImageUrl(imageUrl);
       }
       const cardData = {
         ...payload,
@@ -258,6 +259,14 @@ const Index: NextPage = () => {
     setActiveIndex(index); // Set the clicked item as active
   };
 
+  const textColor = `text-${
+    bgColor === "red"
+      ? "red-400"
+      : bgColor === "yellow"
+      ? "yellow-400"
+      : "blue-400"
+  }`;
+
   useEffect(() => {
     const runAnimations = async () => {
       await wait(3000);
@@ -386,7 +395,7 @@ const Index: NextPage = () => {
       {steps !== 0 && (
         <div
           className={`${steps !== 5 && "flex flex-col"} min-h-screen ${
-            steps !== 8 ? "justify-between" : "justify-center"
+            steps !== 9 ? "justify-between" : "justify-center"
           } items-center w-[100%] overflow-hidden animate__animated relative transition-1 ${
             animateIn && "animate__fadeIn"
           } animate__slow bg-${bgColor}-opacity`}
@@ -417,7 +426,17 @@ const Index: NextPage = () => {
               Your browser does not support the audio element.
             </audio>
           )}
-          <Ellipse
+          <img
+            src="/awan-1.png"
+            className="absolute top-[10%] right-0 transition-1 z-0 left-0 w-[100%] scale-150 opacity-60"
+            alt="awan emina"
+          />
+          <img
+            src="/awan-2.png"
+            className="absolute bottom-[10%] right-0 transition-1 z-0 left-0 w-[100%] scale-150 opacity-60"
+            alt="awan emina"
+          />
+          {/* <Ellipse
             className="absolute top-0 right-0 transition-1 z-0"
             color={
               bgColor === "red"
@@ -436,7 +455,7 @@ const Index: NextPage = () => {
                 ? "#F4DEA7"
                 : "#9F85BB"
             }
-          />
+          /> */}
           {steps === 1 && (
             <div className="flex flex-col h-[100%]">
               <div
@@ -455,7 +474,7 @@ const Index: NextPage = () => {
                       ? "#F78B93"
                       : bgColor === "yellow"
                       ? "#F4DEA7"
-                      : "#8CB9EA"
+                      : "#5e9fe5"
                   }
                   className={`mb-5 transition-1`}
                 />
@@ -509,7 +528,7 @@ const Index: NextPage = () => {
                       </div>
                     </div>
                     <div
-                      className={`bg-blue-opacity cursor-pointer aspect-square rounded-lg transition-half ${
+                      className={`bg-blue-opacity-choice cursor-pointer aspect-square rounded-lg transition-half ${
                         bgColor === "blue" && "border-white border-4 shadow-xl"
                       }`}
                     >
@@ -577,7 +596,7 @@ const Index: NextPage = () => {
                     ? "#F78B93"
                     : bgColor === "yellow"
                     ? "#F4DEA7"
-                    : "#8CB9EA"
+                    : "#5e9fe5"
                 }
                 className={`my-5 transition-1 ${
                   animateIn2 && !animateOut
@@ -738,7 +757,7 @@ const Index: NextPage = () => {
                     ? "#F78B93"
                     : bgColor === "yellow"
                     ? "#F4DEA7"
-                    : "#8CB9EA"
+                    : "#5e9fe5"
                 }
                 className={`my-5 transition-1`}
               />
@@ -881,7 +900,7 @@ const Index: NextPage = () => {
                         ? "#F78B93"
                         : bgColor === "yellow"
                         ? "#F4DEA7"
-                        : "#8CB9EA"
+                        : "#5e9fe5"
                     }
                     className={`transition-1 inline`}
                   />
@@ -1077,8 +1096,10 @@ const Index: NextPage = () => {
             </div>
           )}
           {steps === 8 && (
-            <>
-              <div className="w-[100%] p-4 absolute top-0 left-0 z-10">
+            <div
+              className={`flex flex-col justify-center items-center w-[100%] h-[100%] p-5 relative z-10`}
+            >
+              <div className="w-[100%] py-2 flex justify-betwee gap-3">
                 <button
                   className={`text-center bg-white rounded-xl shadow-sm py-2 px-5 text-${
                     bgColor === "red"
@@ -1095,6 +1116,166 @@ const Index: NextPage = () => {
                 >
                   {"< Back"}
                 </button>
+                <div
+                  className={`text-center text-${bgColor}-400 bg-white w-[75%] py-4 rounded-xl transition-1 flex-1`}
+                >
+                  Your Card Preview
+                </div>
+              </div>
+
+              <Logo
+                width={100}
+                height={50}
+                color={
+                  bgColor === "red"
+                    ? "#F78B93"
+                    : bgColor === "yellow"
+                    ? "#F4DEA7"
+                    : "#5e9fe5"
+                }
+                className={`mb-5 mt-5 transition-1`}
+              />
+              <div className="px-5 relative text-center">
+                {imageUrl && (
+                  <img
+                    src={imageUrl}
+                    alt="Card Image"
+                    className={`w-[90%] aspect-square object-cover rounded-md m-auto border-2 border-${
+                      bgColor === "red"
+                        ? "red"
+                        : bgColor === "yellow"
+                        ? "yellow"
+                        : "blue"
+                    } ${animateIn && "animate__animated animate__zoomIn"}`}
+                  />
+                )}
+                <Image
+                  src={`/love.png`}
+                  alt="Card Image"
+                  width={100}
+                  height={100}
+                  className="absolute left-0 bottom-0 animate__animated animate__pulse animate__infinite animate__slow"
+                />
+              </div>
+
+              <div
+                className={`bg-white w-[100%] mt-5 px-3 py-2 rounded-md border-2 border-${
+                  bgColor === "red"
+                    ? "red"
+                    : bgColor === "yellow"
+                    ? "yellow"
+                    : "blue"
+                } ${
+                  animateIn &&
+                  "animate__animated animate__zoomIn animate__delay-2s"
+                }`}
+              >
+                <h4 className={`${textColor}`}>
+                  Dear <b className="capitalize">{payload?.recipient}</b>,
+                </h4>
+                <h4 className={`${textColor} mb-4`}>
+                  <b className="capitalize">{payload?.sender}</b> send you a
+                  connection card
+                </h4>
+                <svg
+                  width="100%"
+                  height="4"
+                  viewBox="0 0 333 2"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line
+                    y1="0.612793"
+                    x2="333"
+                    y2="0.612793"
+                    stroke="url(#paint0_linear_180_1481)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_180_1481"
+                      x1="-21"
+                      y1="1.11279"
+                      x2="346"
+                      y2="1.11298"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor={bgColor} stopOpacity="0" />
+                      <stop offset="0.5" stopColor={bgColor} />
+                      <stop offset="1" stopColor={bgColor} stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <p className={`${textColor} py-5`}>{payload?.message}</p>
+              </div>
+              <div className={`flex gap-4 justify-center items-stretch`}>
+                <img
+                  alt="HeartLeft"
+                  width={50}
+                  src="/heart-left.png"
+                  className={`aspect-square object-contain ${
+                    animateIn &&
+                    "animate__animated animate__bounceInLeft animate__delay-3s"
+                  }`}
+                />
+
+                <a
+                  href="https://www.instagram.com/reel/C4u3fhtp0ik/?igsh=MW1sZ282aGowcTdnYw=="
+                  className={`bg-[#85E7E6] text-center mt-5 text-white text-shadow shadow-md w-[100%] py-4 px-5 rounded-md transition-1 animate__animated  animate__tada animate__infinite animate__slow`}
+                  target="_blank"
+                >
+                  <strong>
+                    Makeup <br /> inspo
+                  </strong>
+                </a>
+                <a
+                  href="https://www.instagram.com/reel/C4xCDdbJTtN/?igsh=OWcwcmdrdWt4ZGFt"
+                  className={`bg-[#FCBDCB] text-center mt-5 text-white text-shadow shadow-md w-[100%] py-4 px-5 rounded-md transition-1 animate__animated animate__tada animate__infinite animate__slow`}
+                  target="_blank"
+                >
+                  <strong>
+                    OOTD <br /> inspo
+                  </strong>
+                </a>
+                <img
+                  alt="HeartRight"
+                  width={50}
+                  src="/heart-right.png"
+                  className={`aspect-square object-contain ${
+                    animateIn &&
+                    "animate__animated animate__bounceInRight animate__delay-3s"
+                  }`}
+                />
+              </div>
+              <button
+                className={`text-center text-white mt-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1 ${
+                  animateIn &&
+                  "animate__animated animate__zoomIn animate__delay-3s"
+                }`}
+                onClick={() => setSteps(9)}
+              >
+                Send Your Card
+              </button>
+            </div>
+          )}
+          {steps === 9 && (
+            <>
+              <div className="w-[100%] p-4 absolute top-0 left-0 z-10">
+                <button
+                  className={`text-center bg-white rounded-xl shadow-sm py-2 px-5 text-${
+                    bgColor === "red"
+                      ? "red-400"
+                      : bgColor === "yellow"
+                      ? "yellow-400"
+                      : "blue-400"
+                  }`}
+                  onClick={async () => {
+                    setSteps(8);
+                    setAnimateIn2(true);
+                    setAnimateOut(false);
+                  }}
+                >
+                  {"< Back"}
+                </button>
               </div>
               <div className="flex flex-col items-center h-[100%] justify-center relative z-10 gap-3 w-[100%]">
                 <Logo
@@ -1105,7 +1286,7 @@ const Index: NextPage = () => {
                       ? "#F78B93"
                       : bgColor === "yellow"
                       ? "#F4DEA7"
-                      : "#8CB9EA"
+                      : "#5e9fe5"
                   }
                   className={`mb-5 transition-1`}
                 />
@@ -1242,4 +1423,5 @@ const Index: NextPage = () => {
     </>
   );
 };
+
 export default Index;

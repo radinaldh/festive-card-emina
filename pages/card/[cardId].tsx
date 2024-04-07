@@ -1,6 +1,4 @@
 import { db } from "@/app/utils/firebase/firebaseConfig";
-import Ellipse from "@/components/Ellipse";
-import EllipseRevert from "@/components/EllipseRevert";
 import Logo from "@/components/Logo";
 import lottieLetter from "@/public/letter.json";
 import "animate.css";
@@ -66,25 +64,15 @@ const CardPage: NextPage<IProps> = ({ data }) => {
       <div
         className={`relative z-10 flex flex-col min-h-screen justify-center items-center w-[100%] overflow-x-hidden animate__animated transition-1 animate__slow bg-${data?.color}-opacity`}
       >
-        <Ellipse
-          className="absolute top-0 right-0 transition-1 z-0"
-          color={
-            data?.color === "red"
-              ? "#D97279"
-              : data?.color === "yellow"
-              ? "#F4DEA7"
-              : "#9F85BB"
-          }
+        <img
+          src="/awan-1.png"
+          className="absolute top-[10%] right-0 transition-1 z-0 left-0 w-[100%] scale-150 opacity-60"
+          alt="awan emina"
         />
-        <EllipseRevert
-          className="absolute bottom-0 left-0 transition-1 z-0"
-          color={
-            data?.color === "red"
-              ? "#D97279"
-              : data?.color === "yellow"
-              ? "#F4DEA7"
-              : "#9F85BB"
-          }
+        <img
+          src="/awan-2.png"
+          className="absolute bottom-[10%] right-0 transition-1 z-0 left-0 w-[100%] scale-150 opacity-60"
+          alt="awan emina"
         />
         {steps === 0 && (
           <Lottie
@@ -107,7 +95,7 @@ const CardPage: NextPage<IProps> = ({ data }) => {
                   ? "#F78B93"
                   : data?.color === "yellow"
                   ? "#F4DEA7"
-                  : "#8CB9EA"
+                  : "#5e9fe5"
               }
               className={`mb-5 transition-1`}
             />
@@ -149,13 +137,13 @@ const CardPage: NextPage<IProps> = ({ data }) => {
               <h4 className={`${textColor}`}>
                 Dear <b className="capitalize">{data?.recipient}</b>,
               </h4>
-              <h4 className={`${textColor}`}>
+              <h4 className={`${textColor} mb-4`}>
                 <b className="capitalize">{data?.sender}</b> send you a
                 connection card
               </h4>
               <svg
-                width="333"
-                height="2"
+                width="100%"
+                height="4"
                 viewBox="0 0 333 2"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -175,9 +163,9 @@ const CardPage: NextPage<IProps> = ({ data }) => {
                     y2="1.11298"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stopColor="#F78B93" stopOpacity="0" />
-                    <stop offset="0.5" stopColor="#F78B93" />
-                    <stop offset="1" stopColor="#F78B93" stopOpacity="0" />
+                    <stop stopColor={data?.color} stopOpacity="0" />
+                    <stop offset="0.5" stopColor={data?.color} />
+                    <stop offset="1" stopColor={data?.color} stopOpacity="0" />
                   </linearGradient>
                 </defs>
               </svg>
