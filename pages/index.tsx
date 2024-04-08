@@ -1,23 +1,21 @@
 "use client";
 
 import { saveCardData, uploadImageAndGetURL } from "@/app/services/cardService";
-import { db } from "@/app/utils/firebase/firebaseConfig";
 import Logo from "@/components/Logo";
 import PhotoUpload from "@/components/PhotoUpload";
 import lottieChar from "@/public/character_intro.json";
-import lottieProducts from "@/public/products.json";
-import { doc, getDoc } from "firebase/firestore";
 import moment from "moment";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import QRCode from "qrcode.react";
 import React, { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import { Navigation, Pagination } from "swiper/modules";
-import LoadingHearts from "../components/LoadingHearts";
 import { Swiper, SwiperSlide } from "swiper/react";
+import LoadingHearts from "../components/LoadingHearts";
 
+import LoadingProcess from "@/components/LoadingProcess";
 import "animate.css";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -42,19 +40,19 @@ const initialPayload = {
 
 const sampleItems = [
   {
-    image: "happy.png", // Random animal image
+    image: "happy.png",
     title: "Happy",
     message:
       "Halo bestie! Selamat Lebaran! 🌙🎉 Lebaran kali ini, mari kita tetap stay connected, sharing cerita, dan bertukar doa. Eid Mubarak, bestie!  ",
   },
   {
-    image: "funny.png", // Random nature image
+    image: "funny.png",
     title: "Joyful",
     message:
       "Eid Mubarak, bestie! 🌟Walau kita beda timezone, Cheers to more virtual hangouts and endless laughter! Selamat lebaran bestie 🌙🎉",
   },
   {
-    image: "warm.png", // Random architecture image
+    image: "warm.png",
     title: "Inspiring",
     message:
       "Hey bestie! 🎉 Eid Mubarak! May this Eid bring you lots of happiness and blessings with every step you take. 🌟",
@@ -72,7 +70,7 @@ const Index: NextPage = () => {
   const [renderAudio, setRenderAudio] = useState<boolean>(false);
   const [renderAudioBg, setRenderAudioBg] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const [bgColor, setBgColor] = useState<string>("red");
+  const [bgColor, setBgColor] = useState<string>("blue");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [payload, setPayload] = useState<IPayload>(initialPayload);
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -302,10 +300,10 @@ const Index: NextPage = () => {
   useEffect(() => {
     const runChats = async () => {
       const messages = [
-        "Hello Bestie! Yay, it's festive moment!",
-        "Nggak terasa ya sudah ramadhan lagi",
-        ["Saatnya build connection dengan", "orang terdekat kalian!"],
-        ["Yuk kreasikan connection card", "kamu bareng, EMINA!"],
+        "Hallo bestie, yay lebaran is coming 😍",
+        ["Nggak terasa ya bentar", "lagi udah mau lebaran 😊"],
+        ["Saatnya build connection sama", "orang terdekat kalian 🥰"],
+        ["Yuk kreasikan connection card", "kamu bareng Emina ✨"],
       ];
       for (let i = 0; i < messages.length; i++) {
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
@@ -395,7 +393,7 @@ const Index: NextPage = () => {
       {steps !== 0 && (
         <div
           className={`${steps !== 5 && "flex flex-col"} min-h-screen ${
-            steps !== 9 ? "justify-between" : "justify-center"
+            steps !== 9 && steps !== 7 ? "justify-between" : "justify-center"
           } items-center w-[100%] overflow-hidden animate__animated relative transition-1 ${
             animateIn && "animate__fadeIn"
           } animate__slow bg-${bgColor}-opacity`}
@@ -436,26 +434,7 @@ const Index: NextPage = () => {
             className="absolute bottom-[10%] right-0 transition-1 z-0 left-0 w-[100%] scale-150 opacity-60"
             alt="awan emina"
           />
-          {/* <Ellipse
-            className="absolute top-0 right-0 transition-1 z-0"
-            color={
-              bgColor === "red"
-                ? "#D97279"
-                : bgColor === "yellow"
-                ? "#F4DEA7"
-                : "#9F85BB"
-            }
-          />
-          <EllipseRevert
-            className="absolute bottom-0 left-0 transition-1 z-0"
-            color={
-              bgColor === "red"
-                ? "#D97279"
-                : bgColor === "yellow"
-                ? "#F4DEA7"
-                : "#9F85BB"
-            }
-          /> */}
+
           {steps === 1 && (
             <div className="flex flex-col h-[100%]">
               <div
@@ -492,7 +471,7 @@ const Index: NextPage = () => {
               <div
                 className={`bg-white transition-1 absolute left-0 ${
                   animateIn2 && !animateOut
-                    ? "animate__animated animate__slow animate__fadeInUpBig h-[40vh] bottom-2"
+                    ? "animate__animated animate__slow animate__fadeInUpBig h-[40vh] bottom-0"
                     : !animateIn2 && !animateOut
                     ? "-bottom-[100%]"
                     : !animateIn2 && animateOut
@@ -702,42 +681,97 @@ const Index: NextPage = () => {
                     ? "animate__fadeIn"
                     : char > 6 && "animate__fadeOut"
                 } `}
-                onClick={() => setChar((i: any) => i + 1)}
               >
-                <img
-                  src="/snakeBg.png"
-                  className="w-[100%] h-[100%] object-contain"
-                  alt="emina"
-                />
-                <img
-                  src="/char.png"
-                  className={`absolute w-[30%] transition-1 ${
-                    char === 0
-                      ? "bottom-[6%] left-2"
-                      : char === 1
-                      ? "bottom-[6%] left-[65%]"
-                      : char === 2
-                      ? "bottom-[27%] left-[65%]"
-                      : char === 3
-                      ? "bottom-[27%] left-2"
-                      : char === 4
-                      ? "bottom-[49%] left-2"
-                      : char === 5
-                      ? "bottom-[49%] left-[65%]"
-                      : char === 6
-                      ? "bottom-[72%] left-[65%]"
-                      : "bottom-[72%] left-2"
-                  }`}
-                  alt="emina char"
-                />
-              </div>
-              <div className="absolute bottom-3 w-[100%] px-5">
-                <button
-                  className={`text-center text-white p-5 bg-${bgColor} w-[100%] py-4 rounded-md transition-1 animate__animated animate__pulse animate__infinite`}
-                  onClick={() => setChar((i: any) => i + 1)}
-                >
-                  <strong>Tap the screen!</strong>
-                </button>
+                <div className="flex flex-col justify-center min-h-screen items-stretch h-screen w-[100%] px-3 z-10">
+                  <div
+                    className={`flex w-[100%] justify-center shadow-md relative items-stretch z-30 relative ${
+                      animateIn && "animate__animated animate__bounceInLeft"
+                    }`}
+                  >
+                    <div
+                      className={`w-[50%] flex justify-center rounded-tl-lg`}
+                    >
+                      <img
+                        src="/step1.png"
+                        alt="Step 1"
+                        className="w-[100%] object-contain"
+                      />
+                    </div>
+                    <div
+                      className={`bg-white p-4 w-[50%] text-${bgColor}-400 h-[100%] flex items-center rounded-tr-lg`}
+                    >
+                      <strong>Choose your colors of connection</strong>
+                    </div>
+                    <Image
+                      alt={"hearts"}
+                      width={75}
+                      height={75}
+                      src={`/heart-left.png`}
+                      className="absolute inline left-0 -top-5 z-40 animate__animated animate__heartBeat animate__infinite animate__slower"
+                    />
+                  </div>
+                  <div
+                    className={`flex w-[100%] justify-center shadow-md relative items-stretch z-20 ${
+                      animateIn &&
+                      "animate__animated animate__bounceInRight animate__slow"
+                    }`}
+                  >
+                    <div
+                      className={`bg-white p-4 w-[50%] text-${bgColor}-400 text-end h-[150px] flex items-center`}
+                    >
+                      <strong>Write your connection Message</strong>
+                    </div>
+                    <div
+                      className={`bg-red-opacity w-[50%] flex justify-center`}
+                    >
+                      <img
+                        src="/step2.png"
+                        alt="Step 2"
+                        className="w-[100%] object-contain"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    className={`flex w-[100%] justify-center shadow-md items-stretch z-10 relative ${
+                      animateIn &&
+                      "animate__animated animate__bounceInLeft animate__slower"
+                    }`}
+                  >
+                    <div
+                      className={`w-[50%] flex justify-center rounded-bl-lg`}
+                    >
+                      <img
+                        src="/step3.png"
+                        alt="Step 2"
+                        className="w-[100%] object-contain"
+                      />
+                    </div>
+                    <div
+                      className={`bg-white p-4 w-[50%] text-${bgColor}-400 h-[100%] flex items-center rounded-br-lg`}
+                    >
+                      <strong>Insert your photo</strong>
+                    </div>
+                    <Image
+                      alt={"hearts"}
+                      width={75}
+                      height={75}
+                      src={`/heart-right.png`}
+                      className="absolute inline right-0 bottom-0 animate__animated animate__heartBeat animate__infinite animate__slower animate__delay-2s"
+                    />
+                  </div>
+                  <div className={`transition-1 w-[100%] mt-5`}>
+                    <button
+                      className={`text-center text-white p-5 bg-blue w-[100%] py-4 rounded-md transition-1 animate__animated animate__pulse animate__infinite animate__slow`}
+                      onClick={async () => {
+                        setAnimateOut(false);
+                        setChar(5);
+                        setSteps(4);
+                      }}
+                    >
+                      <strong>Next</strong>
+                    </button>
+                  </div>
+                </div>
               </div>
             </>
           )}
@@ -946,32 +980,6 @@ const Index: NextPage = () => {
                   </label>
                 </div>
                 <div className="relative">
-                  {/* <div className="flex justify-center items-stretch gap-3 w-[100%] my-4">
-                    {sampleItems.map((item: any, index: number) => (
-                      <div
-                        className={`rounded-2xl text-center py-5 transition-1 ${
-                          activeIndex === index ? "shadow-xl" : "shadow-sm"
-                        } text-black bg-gradient w-[100%] shadow-md cursor-pointer`}
-                        key={index}
-                        onClick={() => handleMessage(index, item)}
-                      >
-                        <div className={`p-2 mx-2`}>
-                          <Image
-                            alt={item.title}
-                            width={25}
-                            height={25}
-                            src={`/${item.image}`}
-                            className="inline"
-                          />
-                        </div>
-
-                        <h6>{item.title}</h6>
-                        <p className="text-[10px] lg:text-[12px] px-2">
-                          {item.message}
-                        </p>
-                      </div>
-                    ))}
-                  </div> */}
                   <Swiper
                     modules={[Navigation, Pagination]}
                     navigation
@@ -1074,24 +1082,20 @@ const Index: NextPage = () => {
             </div>
           )}
           {steps === 7 && (
-            <div className="h-screen relative flex justify-center items-center overflow-hidden">
-              <h2
-                className={`z-10 px-2 text-center animate__animated animate__pulse animate_slow animate__infinite text-shadow-${
-                  bgColor === "red"
-                    ? "red"
-                    : bgColor === "yellow"
-                    ? "yellow"
-                    : "blue"
-                }`}
-              >
-                <strong> Your Connection Card is still being processed</strong>
-              </h2>
-              <Lottie
-                loop
-                animationData={lottieProducts}
-                play
-                style={{ width: "100%", height: "100%" }}
-                className={`absolute top-0 left-0 right-0 bottom-0`}
+            <div className="h-screen relative flex flex-col justify-center items-center overflow-hidden">
+              <Logo
+                width={200}
+                height={100}
+                color={bgColor}
+                className={`mb-5 `}
+              />
+              <LoadingProcess color={bgColor} />
+              <Image
+                src="/colors-of-connection.png"
+                alt="Emina Logo"
+                width={400}
+                height={200}
+                layout="responsive"
               />
             </div>
           )}
@@ -1207,45 +1211,7 @@ const Index: NextPage = () => {
                 </svg>
                 <p className={`${textColor} py-5`}>{payload?.message}</p>
               </div>
-              {/* <div className={`flex gap-4 justify-center items-stretch`}>
-                <img
-                  alt="HeartLeft"
-                  width={50}
-                  src="/heart-left.png"
-                  className={`aspect-square object-contain ${
-                    animateIn &&
-                    "animate__animated animate__bounceInLeft animate__delay-3s"
-                  }`}
-                />
 
-                <a
-                  href="https://www.instagram.com/reel/C4u3fhtp0ik/?igsh=MW1sZ282aGowcTdnYw=="
-                  className={`bg-[#85E7E6] text-center mt-5 text-white text-shadow shadow-md w-[100%] py-4 px-5 rounded-md transition-1 animate__animated  animate__tada animate__infinite animate__slow`}
-                  target="_blank"
-                >
-                  <strong>
-                    Makeup <br /> inspo
-                  </strong>
-                </a>
-                <a
-                  href="https://www.instagram.com/reel/C4xCDdbJTtN/?igsh=OWcwcmdrdWt4ZGFt"
-                  className={`bg-[#FCBDCB] text-center mt-5 text-white text-shadow shadow-md w-[100%] py-4 px-5 rounded-md transition-1 animate__animated animate__tada animate__infinite animate__slow`}
-                  target="_blank"
-                >
-                  <strong>
-                    OOTD <br /> inspo
-                  </strong>
-                </a>
-                <img
-                  alt="HeartRight"
-                  width={50}
-                  src="/heart-right.png"
-                  className={`aspect-square object-contain ${
-                    animateIn &&
-                    "animate__animated animate__bounceInRight animate__delay-3s"
-                  }`}
-                />
-              </div> */}
               <button
                 className={`text-center text-white mt-3 bg-${bgColor} w-[100%] py-4 rounded-md transition-1 ${
                   animateIn &&
