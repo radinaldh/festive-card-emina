@@ -6,6 +6,21 @@ class EminaDoc extends Document {
       <Html lang="en">
         <Head>
           <meta name="description" content="Emina Festive Microsite" />
+          {/* Google Analytics (gtag.js) */}
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-R6QFWLKZXS"
+          ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-R6QFWLKZXS');
+              `,
+            }}
+          />
         </Head>
         <body>
           <Main />
