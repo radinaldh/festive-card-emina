@@ -490,7 +490,7 @@ const Index: NextPage = () => {
                 />
               </div>
               <div
-                className={`bg-white transition-1 absolute ${
+                className={`bg-white transition-1 absolute left-0 ${
                   animateIn2 && !animateOut
                     ? "animate__animated animate__slow animate__fadeInUpBig h-[40vh] bottom-2"
                     : !animateIn2 && !animateOut
