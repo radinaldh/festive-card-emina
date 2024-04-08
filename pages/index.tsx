@@ -452,8 +452,8 @@ const Index: NextPage = () => {
                     bgColor === "red"
                       ? "#F78B93"
                       : bgColor === "yellow"
-                      ? "#F4DEA7"
-                      : "#5e9fe5"
+                      ? "#878684"
+                      : "#FFF"
                   }
                   className={`mb-5 transition-1`}
                 />
@@ -574,8 +574,8 @@ const Index: NextPage = () => {
                   bgColor === "red"
                     ? "#F78B93"
                     : bgColor === "yellow"
-                    ? "#F4DEA7"
-                    : "#5e9fe5"
+                    ? "#878684"
+                    : "#FFF"
                 }
                 className={`my-5 transition-1 ${
                   animateIn2 && !animateOut
@@ -790,8 +790,8 @@ const Index: NextPage = () => {
                   bgColor === "red"
                     ? "#F78B93"
                     : bgColor === "yellow"
-                    ? "#F4DEA7"
-                    : "#5e9fe5"
+                    ? "#878684"
+                    : "#FFF"
                 }
                 className={`my-5 transition-1`}
               />
@@ -933,8 +933,8 @@ const Index: NextPage = () => {
                       bgColor === "red"
                         ? "#F78B93"
                         : bgColor === "yellow"
-                        ? "#F4DEA7"
-                        : "#5e9fe5"
+                        ? "#878684"
+                        : "#FFF"
                     }
                     className={`transition-1 inline`}
                   />
@@ -1086,7 +1086,13 @@ const Index: NextPage = () => {
               <Logo
                 width={200}
                 height={100}
-                color={bgColor}
+                color={
+                  bgColor === "red"
+                    ? "#F78B93"
+                    : bgColor === "yellow"
+                    ? "#878684"
+                    : "#FFF"
+                }
                 className={`mb-5 `}
               />
               <LoadingProcess color={bgColor} />
@@ -1134,8 +1140,8 @@ const Index: NextPage = () => {
                   bgColor === "red"
                     ? "#F78B93"
                     : bgColor === "yellow"
-                    ? "#F4DEA7"
-                    : "#5e9fe5"
+                    ? "#878684"
+                    : "#FFF"
                 }
                 className={`mb-5 mt-5 transition-1`}
               />
@@ -1251,8 +1257,8 @@ const Index: NextPage = () => {
                     bgColor === "red"
                       ? "#F78B93"
                       : bgColor === "yellow"
-                      ? "#F4DEA7"
-                      : "#5e9fe5"
+                      ? "#878684"
+                      : "#FFF"
                   }
                   className={`mb-5 transition-1`}
                 />

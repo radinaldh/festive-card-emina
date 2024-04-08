@@ -94,8 +94,8 @@ const CardPage: NextPage<IProps> = ({ data }) => {
                 data?.color === "red"
                   ? "#F78B93"
                   : data?.color === "yellow"
-                  ? "#F4DEA7"
-                  : "#5e9fe5"
+                  ? "#878684"
+                  : "#FFF"
               }
               className={`mb-5 transition-1`}
             />
