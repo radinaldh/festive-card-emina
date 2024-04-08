@@ -9,7 +9,7 @@ class EminaDoc extends Document {
           {/* Google Analytics (gtag.js) */}
           <script
             async
-            src="https://www.googletagmanager.com/gtag/js?id=G-R6QFWLKZXS"
+            src="https://www.googletagmanager.com/gtag/js?id=G-0EJ5N4YZEP"
           ></script>
           <script
             dangerouslySetInnerHTML={{
@@ -17,7 +17,7 @@ class EminaDoc extends Document {
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', 'G-R6QFWLKZXS');
+                gtag('config', 'G-0EJ5N4YZEP');
               `,
             }}
           />
