@@ -721,9 +721,7 @@ const Index: NextPage = () => {
                     >
                       <strong>Write your connection Message</strong>
                     </div>
-                    <div
-                      className={`bg-red-opacity w-[50%] flex justify-center`}
-                    >
+                    <div className={`bg-[#ffb3b8] w-[50%] flex justify-center`}>
                       <img
                         src="/step2.png"
                         alt="Step 2"
