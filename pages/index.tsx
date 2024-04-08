@@ -306,7 +306,7 @@ const Index: NextPage = () => {
         ["Yuk kreasikan connection card", "kamu bareng Emina ✨"],
       ];
       for (let i = 0; i < messages.length; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+        await new Promise((resolve) => setTimeout(resolve, 1500)); // Wait for 1 second
         setChat((currentChat: any) => [...currentChat, messages[i]]); // Append new message
       }
     };
@@ -596,7 +596,7 @@ const Index: NextPage = () => {
                   Array.isArray(message) ? (
                     <span
                       key={index}
-                      className="text-bubble p-5 text-end animate__animated animate__fadeIn"
+                      className="text-bubble p-5 text-end animate__animated animate__fadeIn animate__slow"
                     >
                       {message.map((part, partIndex) => (
                         <React.Fragment key={partIndex}>
@@ -608,7 +608,7 @@ const Index: NextPage = () => {
                   ) : (
                     <span
                       key={index}
-                      className="text-bubble p-5 text-end animate__animated animate__fadeIn"
+                      className="text-bubble p-5 text-end animate__animated animate__fadeIn animate__slow"
                     >
                       {message}
                     </span>
@@ -684,7 +684,7 @@ const Index: NextPage = () => {
               >
                 <div className="flex flex-col justify-center min-h-screen items-stretch h-screen w-[100%] px-3 z-10">
                   <div
-                    className={`flex w-[100%] justify-center shadow-md relative items-stretch z-30 relative ${
+                    className={`flex w-[100%] justify-center shadow-md relative items-stretch z-30 ${
                       animateIn && "animate__animated animate__bounceInLeft"
                     }`}
                   >
